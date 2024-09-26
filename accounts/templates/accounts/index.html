@@ -1,10 +1,14 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="{% static 'css/test.css' %}">
+    <script src="{% static 'js/test.js' %}"></script>
     <title>Accounts Index</title>
 </head>
 <body>
-Accounts Index
+<h1>Accounts Index (if the background is blue then the css is loaded fine)</h1>
 </body>
 </html>

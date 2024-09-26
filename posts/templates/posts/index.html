@@ -1,10 +1,14 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="{% static 'css/test.css' %}">
+    <script src="{% static 'js/test.js' %}"></script>
     <title>Posts Index</title>
 </head>
 <body>
-Posts Index
+<h1>Posts Index (if the background is blue then the css is loaded fine)</h1>
 </body>
 </html>
