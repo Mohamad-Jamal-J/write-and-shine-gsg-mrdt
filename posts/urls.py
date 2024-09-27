@@ -8,4 +8,5 @@ urlpatterns = [
     path('posts/', views.get_all_posts, name='get_all_posts'),
     path('post/<int:post_id>/', views.delete_edit_post, name='delete_edit_post'),
     path('posts/search/', views.search_post, name='search_post'),
+    path('posts/<int:post_id>/like/', views.like_post, name='like_post'),
 ]

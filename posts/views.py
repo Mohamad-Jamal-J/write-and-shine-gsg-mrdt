@@ -2,7 +2,7 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from posts.models import Post, Post_Tag, Tag
+from posts.models import Like, Post, Post_Tag, Tag
 from posts.serializers import PostSerializer
 from django.utils import timezone
 
@@ -46,8 +46,15 @@ def create_post(request):
 
 @api_view(['GET'])
 def get_all_posts(request):
-    posts = Post.objects.all() 
-    return render(request, 'posts.html', {'posts': posts})  # Pass posts to the template
+    posts = Post.objects.all()
+    
+    # Annotate each post with the count of likes and comments
+    for post in posts:
+        post.likes_count = post.like_set.count() 
+        post.comments_count = post.comment_set.count() 
+
+    return render(request, 'posts.html', {'posts': posts})  
+
 
 
 @api_view(['DELETE', 'POST', 'GET'])
@@ -90,3 +97,24 @@ def search_post(request):
 
     serializer = PostSerializer(posts, many=True)  
     return render(request, 'posts.html', {'posts': serializer.data})
+
+@api_view(['GET'])
+def like_post(request, post_id):
+    if request.user.is_authenticated:
+        post = get_object_or_404(Post, pk=post_id)
+
+        # Check if the user has already liked this post
+        like_instance = Like.objects.filter(user=request.user, post=post).first()
+        
+        if like_instance:
+            # If the like exists, delete it
+            like_instance.delete()
+            return redirect('get_all_posts') 
+
+        # If the like does not exist, create a new like
+        Like.objects.create(user=request.user, post=post)
+        return redirect('get_all_posts') 
+
+    return HttpResponse("You should be logged in to like/unlike a post", status=403)
+
+

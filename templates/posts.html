@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Post List</title>
+    <title>Posts</title>
 </head>
 <body>
     <h1>Post List</h1>
@@ -20,10 +20,17 @@
                     <h2>{{ post.title }}</h2>
                     <p>{{ post.body }}</p>
                     <p><strong>Author:</strong> {{ post.author.username }}</p>
-                    <p><strong>Created At:</strong> {{ post.created_at }}</p>
-                    <p><strong>Last Updated At:</strong> {{ post.updated_at }}</p>
+                    <p><strong>Created At:</strong> {{ post.created_at|date:"F j, Y, g:i a" }}</p>
+                    <p><strong>Last Updated At:</strong> {{ post.updated_at|date:"F j, Y, g:i a" }}</p>
                     <a href="{% url 'delete_edit_post' post.id %}">Delete</a>
                     <a href="{% url 'delete_edit_post' post.id %}?edit=true">Edit</a>
+                    <a href="{% url 'like_post' post.id %}">Like</a>
+                    
+                    {% comment %} <form method="POST" action="{% url 'comment_post' post.id %}">
+                        {% csrf_token %}
+                        <input type="text" name="body" placeholder="Add a comment" required>
+                        <button type="submit">Comment</button>
+                    </form> {% endcomment %}
                 </li>
             {% endfor %}
         </ul>
