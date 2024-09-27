@@ -47,14 +47,24 @@ def create_post(request):
 
 @api_view(['GET'])
 def get_all_posts(request):
-    posts = Post.objects.all()
-    
-    # Annotate each post with the count of likes and comments
-    for post in posts:
-        post.likes_count = post.like_set.count() 
-        post.comments_count = post.comment_set.count() 
+    tag_name = request.GET.get('tag', '').strip().capitalize()  # Get tag from query parameter and capitalize
 
-    return render(request, 'posts.html', {'posts': posts})  
+    if tag_name:
+      
+        tag = Tag.objects.filter(name=tag_name).first()
+
+        if tag:
+            posts = Post.objects.filter(post_tag__tag=tag).distinct()
+        else:
+            posts = Post.objects.none()
+    else:
+        posts = Post.objects.all()
+
+    for post in posts:
+        post.likes_count = post.like_set.count()
+        post.comments_count = post.comment_set.count()
+
+    return render(request, 'posts.html', {'posts': posts}) 
 
 
 
