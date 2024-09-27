@@ -4,6 +4,8 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from posts.models import Post, Post_Tag, Tag
 from posts.serializers import PostSerializer
+from django.utils import timezone
+
 
 # Create your views here.
 def index(request):
@@ -42,5 +44,37 @@ def create_post(request):
 
 @api_view(['GET'])
 def get_all_posts(request):
-    posts = Post.objects.all()  # Fetch all posts from the database
+    posts = Post.objects.all() 
     return render(request, 'posts.html', {'posts': posts})  # Pass posts to the template
+
+
+@api_view(['DELETE', 'POST', 'GET'])
+def delete_edit_post(request, post_id):
+    if request.user.is_authenticated:
+        post = get_object_or_404(Post, pk=post_id)
+
+        # Check if the authenticated user is the author of the post
+        if post.author != request.user:
+            return Response({"message": "You do not have permission to edit or delete this post."}, status=403)
+
+        if request.method == 'GET':
+            # Handle the edit action
+            if 'edit' in request.GET:
+                return render(request, 'post_edit.html', {'post': post})
+            else:
+                return render(request, 'posts.html', {'post': post})
+
+        elif request.method == 'POST':
+            post_fields = ['title', 'body']
+            for field in post_fields:
+                if field in request.POST and request.POST[field] != '':
+                    setattr(post, field, request.POST[field])
+            post.updated_at = timezone.now()
+            post.save()
+            return redirect('get_all_posts')  # Redirect to the list of posts after editing
+
+        elif request.method == 'DELETE':
+            post.delete()
+            return redirect('get_all_posts')  # Redirect to the list of posts after deleting
+
+    return HttpResponse("You should be logged in to delete/edit a post", status=403)

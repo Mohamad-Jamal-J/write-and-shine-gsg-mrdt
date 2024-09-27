@@ -16,6 +16,15 @@
                     <p>{{ post.body }}</p>
                     <p><strong>Author:</strong> {{ post.author.name }}</p>
                     <p><strong>Created At:</strong> {{ post.created_at }}</p>
+                    <p><strong>Last Update At:</strong> {{ post.updated_at }}</p>
+                    
+                    <a href="{% url 'delete_edit_post' post.id %}?action=delete">
+                        Delete
+                    </a>
+                    <br>
+                    <a href="{% url 'delete_edit_post' post.id %}?edit=true">
+                        Edit
+                    </a>
                 </li>
             {% endfor %}
         </ul>

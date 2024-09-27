@@ -6,4 +6,5 @@ urlpatterns = [
     # path('posts/', views.index, name='posts_index'),
     path('posts/create/', views.create_post, name='create_post'),
     path('posts/', views.get_all_posts, name='get_all_posts'),
+    path('post/<int:post_id>/', views.delete_edit_post, name='delete_edit_post'),
 ]
