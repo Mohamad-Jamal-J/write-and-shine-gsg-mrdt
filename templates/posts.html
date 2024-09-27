@@ -6,7 +6,7 @@
     <title>Posts</title>
 </head>
 <body>
-    <h1>Post List</h1>
+    <h1>Posts</h1>
 
     <form method="GET" action="{% url 'search_post' %}">
         <input type="text" name="post_name" placeholder="Search for a post" required>
@@ -19,7 +19,7 @@
             <li>
                 <h2>{{ post.title }}</h2>
                 <p>{{ post.body }}</p>
-                <p><strong>Author:</strong> {{ post.author.username }}</p>
+                <p><strong>Author:</strong> {{ post.author.name }}</p>
                 <p><strong>Created At:</strong> {{ post.created_at }}</p>
                 <p><strong>Last Updated At:</strong> {{ post.updated_at }}</p>
                 <p><strong>Likes:</strong> {{ post.likes_count }}</p>
@@ -36,13 +36,17 @@
                     <button type="submit">Comment</button>
                 </form>
                 
-                <!-- Display Comments -->
                 <h4>Comments:</h4>
                 <ul>
                     {% for comment in post.comment_set.all %}
                         <li>
                             <strong>{{ comment.author.name }}:</strong> {{ comment.body }} 
                             <em>at {{ comment.created_at }}</em>
+
+                            {% if comment.author == request.user %}
+                                <a href="{% url 'edit_comment' comment.id %}">Edit</a>
+                                {% comment %} <a href="{% url 'delete_comment' comment.id %}">Delete</a> {% endcomment %}
+                            {% endif %}
                         </li>
                     {% empty %}
                         <li>No comments yet.</li>

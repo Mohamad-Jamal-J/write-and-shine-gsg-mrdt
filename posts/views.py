@@ -131,3 +131,21 @@ def comment_post(request, post_id):
 
     return HttpResponse("You should be logged in to comment on a post", status=403)
 
+
+
+@api_view(['GET', 'POST'])
+def edit_comment(request, comment_id):
+    comment = get_object_or_404(Comment, pk=comment_id)
+
+    if comment.author != request.user:
+        return HttpResponse("You do not have permission to edit this comment.", status=403)
+
+    if request.method == 'POST':
+        body = request.POST.get('body')
+        if body:
+            comment.body = body
+            comment.save()
+            return redirect('get_all_posts')  
+
+    return render(request, 'edit_comment.html', {'comment': comment})
+

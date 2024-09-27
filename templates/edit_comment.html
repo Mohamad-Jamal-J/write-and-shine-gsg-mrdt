@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Comment</title>
+</head>
+<body>
+    <h1>Edit Comment</h1>
+
+    <form method="POST" action="{% url 'edit_comment' comment.id %}">
+        {% csrf_token %}
+        <textarea name="body" required>{{ comment.body }}</textarea>
+        <button type="submit">Update Comment</button>
+    </form>
+
+    <a href="{% url 'get_all_posts' %}">Cancel</a>
+</body>
+</html>
