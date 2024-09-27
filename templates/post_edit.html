@@ -18,6 +18,20 @@
             <label for="body">Body:</label>
             <textarea id="body" name="body" rows="10" required>{{ post.body }}</textarea>
         </div>
+        
+        <div>
+            <h3>Tags</h3>
+            <ul>
+                {% for tag in post.tags.all %}
+                    <li>
+                        {{ tag.name }} 
+                        <button type="submit" name="delete_tag" value="{{ tag.id }}">Delete</button>
+                    </li>
+                {% endfor %}
+            </ul>
+            <input type="text" id="new_tag" name="new_tag" placeholder="Add new tag">
+        </div>
+
         <button type="submit">Update Post</button>
     </form>
     
