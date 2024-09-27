@@ -17,7 +17,7 @@ class Tag(models.Model):
     def __str__(self):
         return self.name
 
-class Post_tag(models.Model):
+class Post_Tag(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     tag = models.ForeignKey(Tag, on_delete=models.CASCADE)
 
