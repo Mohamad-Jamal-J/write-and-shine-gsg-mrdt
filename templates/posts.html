@@ -45,7 +45,11 @@
 
                             {% if comment.author == request.user %}
                                 <a href="{% url 'edit_comment' comment.id %}">Edit</a>
-                                {% comment %} <a href="{% url 'delete_comment' comment.id %}">Delete</a> {% endcomment %}
+                                <form method="POST" action="{% url 'delete_comment' comment.id %}">
+                                    {% csrf_token %}
+                                    <button type="submit">Delete </button>
+                                </form>
+                                
                             {% endif %}
                         </li>
                     {% empty %}

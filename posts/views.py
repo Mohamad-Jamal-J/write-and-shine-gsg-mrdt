@@ -1,3 +1,4 @@
+from pyexpat.errors import messages
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from rest_framework.response import Response
@@ -149,3 +150,12 @@ def edit_comment(request, comment_id):
 
     return render(request, 'edit_comment.html', {'comment': comment})
 
+
+@api_view(['POST'])
+def delete_comment(request, comment_id):
+    comment = get_object_or_404(Comment, pk=comment_id)
+
+    if comment.author == request.user:
+        comment.delete()
+
+    return redirect('get_all_posts')
