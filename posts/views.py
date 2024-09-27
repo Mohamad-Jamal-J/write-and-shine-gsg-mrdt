@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from posts.models import Comment, Like, Post, Post_Tag, Tag
+from posts.models import Comment, Like, Post, Tag
 from posts.serializers import PostSerializer
 from django.utils import timezone
 
@@ -27,34 +27,37 @@ def create_post(request):
                 )
 
                 for tag_name in tags:
-                    tag_name = tag_name.strip().capitalize()  # Capitalize the first letter and trim whitespace
-                    tag, created = Tag.objects.get_or_create(name=tag_name)  # Check for existing tag or create a new one
-                    Post_Tag.objects.create(post=post, tag=tag)  # Link the tag to the post
+                    tag_name = tag_name.strip().capitalize()  # Capitalize and trim whitespace
+                    tag, created = Tag.objects.get_or_create(name=tag_name)  # Get or create the tag
+                    post.tags.add(tag)  # Associate the tag with the post using the ManyToManyField
 
                 return HttpResponse("Post created successfully!")
-                # If we want to return the home page
+                # If you want to redirect to the home page:
                 # return redirect('home')
 
             return HttpResponse("The post data is not valid", status=400)
 
         elif request.method == 'GET':
-            # The page that should appear to the user and they should fill the form in it to create the post
+            # The form to create the post
             return render(request, 'create_post.html')
-            # return HttpResponse("Form to be filled by user")
+
     else:
         return HttpResponse("You should be logged in to create a post", status=403)
 
+
+from rest_framework.decorators import api_view
+from django.shortcuts import render
+from .models import Post, Tag
 
 @api_view(['GET'])
 def get_all_posts(request):
     tag_name = request.GET.get('tag', '').strip().capitalize()  # Get tag from query parameter and capitalize
 
     if tag_name:
-      
         tag = Tag.objects.filter(name=tag_name).first()
 
         if tag:
-            posts = Post.objects.filter(post_tag__tag=tag).distinct()
+            posts = Post.objects.filter(tags=tag).distinct()  # Use 'tags' instead of 'post_tag__tag'
         else:
             posts = Post.objects.none()
     else:
@@ -63,8 +66,10 @@ def get_all_posts(request):
     for post in posts:
         post.likes_count = post.like_set.count()
         post.comments_count = post.comment_set.count()
+        post.post_tags = post.tags.all() 
+        print(post.post_tags)
 
-    return render(request, 'posts.html', {'posts': posts}) 
+    return render(request, 'posts.html', {'posts': posts})
 
 
 

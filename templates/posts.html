@@ -24,12 +24,18 @@
         {% for post in posts %}
             <li>
                 <h2>{{ post.title }}</h2>
+                <p>Tags: 
+                    {% for tag in post.post_tags %}
+                        {{ tag.name }}{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                </p>
                 <p>{{ post.body }}</p>
                 <p><strong>Author:</strong> {{ post.author.name }}</p>
                 <p><strong>Created At:</strong> {{ post.created_at }}</p>
                 <p><strong>Last Updated At:</strong> {{ post.updated_at }}</p>
                 <p><strong>Likes:</strong> {{ post.likes_count }}</p>
                 <p><strong>Comments:</strong> {{ post.comments_count }}</p>
+
                 <a href="{% url 'delete_edit_post' post.id %}">Delete</a>
                 <a href="{% url 'delete_edit_post' post.id %}?edit=true">Edit</a>
                 <a href="{% url 'like_post' post.id %}">Like</a>
@@ -53,7 +59,7 @@
                                 <a href="{% url 'edit_comment' comment.id %}">Edit</a>
                                 <form method="POST" action="{% url 'delete_comment' comment.id %}">
                                     {% csrf_token %}
-                                    <button type="submit">Delete </button>
+                                    <button type="submit">Delete</button>
                                 </form>
                                 
                             {% endif %}
@@ -69,7 +75,5 @@
     <p>No posts available.</p>
 {% endif %}
 
-
-    
 </body>
 </html>
