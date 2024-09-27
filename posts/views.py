@@ -1,5 +1,5 @@
 from django.http import HttpResponse
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from posts.models import Post, Post_Tag, Tag
@@ -39,3 +39,8 @@ def create_post(request):
             # return HttpResponse("Form to be filled by user")
     else:
         return HttpResponse("You should be logged in to create a post", status=403)
+
+@api_view(['GET'])
+def get_all_posts(request):
+    posts = Post.objects.all()  # Fetch all posts from the database
+    return render(request, 'posts.html', {'posts': posts})  # Pass posts to the template
