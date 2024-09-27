@@ -2,7 +2,7 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from posts.models import Like, Post, Post_Tag, Tag
+from posts.models import Comment, Like, Post, Post_Tag, Tag
 from posts.serializers import PostSerializer
 from django.utils import timezone
 
@@ -98,6 +98,7 @@ def search_post(request):
     serializer = PostSerializer(posts, many=True)  
     return render(request, 'posts.html', {'posts': serializer.data})
 
+
 @api_view(['GET'])
 def like_post(request, post_id):
     if request.user.is_authenticated:
@@ -117,4 +118,16 @@ def like_post(request, post_id):
 
     return HttpResponse("You should be logged in to like/unlike a post", status=403)
 
+
+@api_view(['POST'])
+def comment_post(request, post_id):
+    if request.user.is_authenticated:
+        post = get_object_or_404(Post, pk=post_id)
+        comment_body = request.POST.get('body', '')
+
+        if comment_body:
+            Comment.objects.create(post=post, author=request.user, body=comment_body)
+            return redirect('get_all_posts')  
+
+    return HttpResponse("You should be logged in to comment on a post", status=403)
 
