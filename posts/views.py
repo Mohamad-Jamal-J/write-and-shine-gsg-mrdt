@@ -7,9 +7,10 @@ from posts.serializers import PostSerializer
 from django.utils import timezone
 
 
-# Create your views here.
 def index(request):
     return render(request, 'posts/index.html')  
+
+
 def create_post(request):
     if request.user.is_authenticated:
         if request.method == 'POST':  # The user clicked the button to create a post
@@ -41,6 +42,7 @@ def create_post(request):
             # return HttpResponse("Form to be filled by user")
     else:
         return HttpResponse("You should be logged in to create a post", status=403)
+
 
 @api_view(['GET'])
 def get_all_posts(request):
@@ -78,3 +80,13 @@ def delete_edit_post(request, post_id):
             return redirect('get_all_posts')  # Redirect to the list of posts after deleting
 
     return HttpResponse("You should be logged in to delete/edit a post", status=403)
+
+
+@api_view(['GET'])
+def search_post(request):
+    query_post_name = request.GET.get('post_name', '')
+
+    posts = Post.objects.filter(title__icontains=query_post_name) | Post.objects.filter(body__icontains=query_post_name)
+
+    serializer = PostSerializer(posts, many=True)  
+    return render(request, 'posts.html', {'posts': serializer.data})
