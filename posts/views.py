@@ -10,13 +10,15 @@ from django.utils import timezone
 def index(request):
     return render(request, 'posts/index.html')  
 
-
 def create_post(request):
     if request.user.is_authenticated:
         if request.method == 'POST':  # The user clicked the button to create a post
             title = request.POST.get('title')
             body = request.POST.get('body')
-            tags = request.POST.getlist('tags')
+            tags_input = request.POST.get('tags')  # Get the tags input as a single string
+            
+            # Split the tags by comma and strip whitespace
+            tags = [tag.strip().capitalize() for tag in tags_input.split(',') if tag.strip()]
 
             if title and body:
                 post = Post.objects.create(
@@ -26,7 +28,6 @@ def create_post(request):
                 )
 
                 for tag_name in tags:
-                    tag_name = tag_name.strip().capitalize()  # Capitalize and trim whitespace
                     tag, created = Tag.objects.get_or_create(name=tag_name)  # Get or create the tag
                     post.tags.add(tag)  # Associate the tag with the post using the ManyToManyField
 
