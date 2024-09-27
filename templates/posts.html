@@ -36,7 +36,13 @@
                 <p><strong>Likes:</strong> {{ post.likes_count }}</p>
                 <p><strong>Comments:</strong> {{ post.comments_count }}</p>
 
-                <a href="{% url 'delete_edit_post' post.id %}">Delete</a>
+                <form method="POST" action="{% url 'delete_edit_post' post.id %}" style="display:inline;">
+                    {% csrf_token %}
+                    <input type="hidden" name="delete" value="true"> 
+                    <button type="submit">Delete</button>
+                </form>
+                
+                
                 <a href="{% url 'delete_edit_post' post.id %}?edit=true">Edit</a>
                 <a href="{% url 'like_post' post.id %}">Like</a>
                 

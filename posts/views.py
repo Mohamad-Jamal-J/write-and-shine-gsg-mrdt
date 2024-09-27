@@ -31,7 +31,7 @@ def create_post(request):
                     tag, created = Tag.objects.get_or_create(name=tag_name)  # Get or create the tag
                     post.tags.add(tag)  # Associate the tag with the post using the ManyToManyField
 
-                return HttpResponse("Post created successfully!")
+                return redirect('get_all_posts')  
                 # If you want to redirect to the home page:
                 # return redirect('home')
 
@@ -44,10 +44,6 @@ def create_post(request):
     else:
         return HttpResponse("You should be logged in to create a post", status=403)
 
-
-from rest_framework.decorators import api_view
-from django.shortcuts import render
-from .models import Post, Tag
 
 @api_view(['GET'])
 def get_all_posts(request):
@@ -67,13 +63,11 @@ def get_all_posts(request):
         post.likes_count = post.like_set.count()
         post.comments_count = post.comment_set.count()
         post.post_tags = post.tags.all() 
-        print(post.post_tags)
 
     return render(request, 'posts.html', {'posts': posts})
 
 
-
-@api_view(['DELETE', 'POST', 'GET'])
+@api_view(['POST', 'GET'])
 def delete_edit_post(request, post_id):
     if request.user.is_authenticated:
         post = get_object_or_404(Post, pk=post_id)
@@ -90,17 +84,19 @@ def delete_edit_post(request, post_id):
                 return render(request, 'posts.html', {'post': post})
 
         elif request.method == 'POST':
-            post_fields = ['title', 'body']
-            for field in post_fields:
-                if field in request.POST and request.POST[field] != '':
-                    setattr(post, field, request.POST[field])
-            post.updated_at = timezone.now()
-            post.save()
-            return redirect('get_all_posts')  # Redirect to the list of posts after editing
-
-        elif request.method == 'DELETE':
-            post.delete()
-            return redirect('get_all_posts')  # Redirect to the list of posts after deleting
+            # Check if the form indicates deletion
+            if 'delete' in request.POST:
+                post.delete()  # Delete the post
+                return redirect('get_all_posts')  
+            else:
+                # Handle the post editing
+                post_fields = ['title', 'body']
+                for field in post_fields:
+                    if field in request.POST and request.POST[field] != '':
+                        setattr(post, field, request.POST[field])
+                post.updated_at = timezone.now()
+                post.save()
+                return redirect('get_all_posts')  # Redirect to the list of posts after editing
 
     return HttpResponse("You should be logged in to delete/edit a post", status=403)
 
