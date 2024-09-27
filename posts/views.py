@@ -1,4 +1,3 @@
-from pyexpat.errors import messages
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from rest_framework.response import Response
@@ -66,8 +65,9 @@ def get_all_posts(request):
 
     return render(request, 'posts.html', {'posts': posts})
 
+from django.urls import reverse  # Ensure you have this import
 
-@api_view(['POST', 'GET'])
+@api_view(['GET', 'POST'])
 def delete_edit_post(request, post_id):
     if request.user.is_authenticated:
         post = get_object_or_404(Post, pk=post_id)
@@ -87,18 +87,34 @@ def delete_edit_post(request, post_id):
             # Check if the form indicates deletion
             if 'delete' in request.POST:
                 post.delete()  # Delete the post
-                return redirect('get_all_posts')  
-            else:
-                # Handle the post editing
-                post_fields = ['title', 'body']
-                for field in post_fields:
-                    if field in request.POST and request.POST[field] != '':
-                        setattr(post, field, request.POST[field])
-                post.updated_at = timezone.now()
-                post.save()
-                return redirect('get_all_posts')  # Redirect to the list of posts after editing
+                return redirect('get_all_posts')  # Redirect to the list of posts after deletion  
+
+            # Handle tag deletion
+            if 'delete_tag' in request.POST:
+                tag_id = request.POST['delete_tag']
+                tag = get_object_or_404(Tag, pk=tag_id)
+                post.tags.remove(tag)  # Remove the tag from the post
+                return redirect('get_all_posts')  # Redirect to the list of posts after deleting a tag
+
+            # Handle adding new tags
+            new_tag_name = request.POST.get('new_tag', '').strip()
+            if new_tag_name:
+                tag, created = Tag.objects.get_or_create(name=new_tag_name.capitalize())
+                post.tags.add(tag)  # Associate the new tag with the post
+
+            # Handle the post editing
+            post_fields = ['title', 'body']
+            for field in post_fields:
+                if field in request.POST and request.POST[field] != '':
+                    setattr(post, field, request.POST[field])
+            post.updated_at = timezone.now()
+            post.save()
+            
+            return redirect('get_all_posts') 
 
     return HttpResponse("You should be logged in to delete/edit a post", status=403)
+
+
 
 
 @api_view(['GET'])
