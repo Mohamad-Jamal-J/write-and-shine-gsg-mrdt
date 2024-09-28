@@ -31,7 +31,7 @@ def create_post(request):
                     tag, created = Tag.objects.get_or_create(name=tag_name)  # Get or create the tag
                     post.tags.add(tag)  # Associate the tag with the post using the ManyToManyField
 
-                return redirect('get_all_posts')  
+                return redirect('get_posts')  
                 # If you want to redirect to the home page:
                 # return redirect('home')
 
@@ -44,29 +44,6 @@ def create_post(request):
     else:
         return HttpResponse("You should be logged in to create a post", status=403)
 
-
-@api_view(['GET'])
-def get_all_posts(request):
-    tag_name = request.GET.get('tag', '').strip().capitalize()  # Get tag from query parameter and capitalize
-
-    if tag_name:
-        tag = Tag.objects.filter(name=tag_name).first()
-
-        if tag:
-            posts = Post.objects.filter(tags=tag).distinct()  # Use 'tags' instead of 'post_tag__tag'
-        else:
-            posts = Post.objects.none()
-    else:
-        posts = Post.objects.all()
-
-    for post in posts:
-        post.likes_count = post.like_set.count()
-        post.comments_count = post.comment_set.count()
-        post.post_tags = post.tags.all() 
-
-    return render(request, 'posts.html', {'posts': posts})
-
-from django.urls import reverse  # Ensure you have this import
 
 @api_view(['GET', 'POST'])
 def delete_edit_post(request, post_id):
@@ -88,14 +65,14 @@ def delete_edit_post(request, post_id):
             # Check if the form indicates deletion
             if 'delete' in request.POST:
                 post.delete()  # Delete the post
-                return redirect('get_all_posts')  # Redirect to the list of posts after deletion  
+                return redirect('get_posts')  # Redirect to the list of posts after deletion  
 
             # Handle tag deletion
             if 'delete_tag' in request.POST:
                 tag_id = request.POST['delete_tag']
                 tag = get_object_or_404(Tag, pk=tag_id)
                 post.tags.remove(tag)  # Remove the tag from the post
-                return redirect('get_all_posts')  # Redirect to the list of posts after deleting a tag
+                return redirect('get_posts')  # Redirect to the list of posts after deleting a tag
 
             # Handle adding new tags
             new_tag_name = request.POST.get('new_tag', '').strip()
@@ -111,21 +88,9 @@ def delete_edit_post(request, post_id):
             post.updated_at = timezone.now()
             post.save()
             
-            return redirect('get_all_posts') 
+            return redirect('get_posts') 
 
     return HttpResponse("You should be logged in to delete/edit a post", status=403)
-
-
-
-
-@api_view(['GET'])
-def search_post(request):
-    query_post_name = request.GET.get('post_name', '')
-
-    posts = Post.objects.filter(title__icontains=query_post_name) | Post.objects.filter(body__icontains=query_post_name)
-
-    serializer = PostSerializer(posts, many=True)  
-    return render(request, 'posts.html', {'posts': serializer.data})
 
 
 @api_view(['GET'])
@@ -139,11 +104,11 @@ def like_post(request, post_id):
         if like_instance:
             # If the like exists, delete it
             like_instance.delete()
-            return redirect('get_all_posts') 
+            return redirect('get_posts') 
 
         # If the like does not exist, create a new like
         Like.objects.create(user=request.user, post=post)
-        return redirect('get_all_posts') 
+        return redirect('get_posts') 
 
     return HttpResponse("You should be logged in to like/unlike a post", status=403)
 
@@ -156,7 +121,7 @@ def comment_post(request, post_id):
 
         if comment_body:
             Comment.objects.create(post=post, author=request.user, body=comment_body)
-            return redirect('get_all_posts')  
+            return redirect('get_posts')  
 
     return HttpResponse("You should be logged in to comment on a post", status=403)
 
@@ -174,7 +139,7 @@ def edit_comment(request, comment_id):
         if body:
             comment.body = body
             comment.save()
-            return redirect('get_all_posts')  
+            return redirect('get_posts')  
 
     return render(request, 'edit_comment.html', {'comment': comment})
 
@@ -186,4 +151,4 @@ def delete_comment(request, comment_id):
     if comment.author == request.user:
         comment.delete()
 
-    return redirect('get_all_posts')
+    return redirect('get_posts')

@@ -5,9 +5,7 @@ from posts import views
 urlpatterns = [
     # path('posts/', views.index, name='posts_index'),
     path('create/', views.create_post, name='create_post'),
-    path('/', views.get_all_posts, name='get_all_posts'),
     path('<int:post_id>/', views.delete_edit_post, name='delete_edit_post'),
-    path('search/', views.search_post, name='search_post'),
     path('<int:post_id>/like/', views.like_post, name='like_post'),
     path('<int:post_id>/comment/', views.comment_post, name='comment_post'),
     path('comments/<int:comment_id>/edit/', views.edit_comment, name='edit_comment'),
