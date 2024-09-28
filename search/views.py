@@ -8,15 +8,26 @@ def index(request):
     return render(request, 'search/index.html')
 
 
+def update_post_metadata(posts):
+    """
+    Update each post's likes count, comments count, and tags.
+    """
+    for post in posts:
+        post.likes_count = post.like_set.count()
+        post.comments_count = post.comment_set.count()
+        post.post_tags = post.tags.all()
+    return posts
+
 
 @api_view(['GET'])
 def search_post(request):
     query_post_name = request.GET.get('post_name', '')
-
     posts = Post.objects.filter(title__icontains=query_post_name) | Post.objects.filter(body__icontains=query_post_name)
 
-    serializer = PostSerializer(posts, many=True)  
-    return render(request, 'posts.html', {'posts': serializer.data})
+    # Update post metadata
+    posts = update_post_metadata(posts)
+
+    return render(request, 'posts.html', {'posts': posts})
 
 
 @api_view(['GET'])
@@ -27,15 +38,13 @@ def get_posts(request):
         tag = Tag.objects.filter(name=tag_name).first()
 
         if tag:
-            posts = Post.objects.filter(tags=tag).distinct()  # Use 'tags' instead of 'post_tag__tag'
+            posts = Post.objects.filter(tags=tag).distinct()  
         else:
             posts = Post.objects.none()
     else:
         posts = Post.objects.all()
 
-    for post in posts:
-        post.likes_count = post.like_set.count()
-        post.comments_count = post.comment_set.count()
-        post.post_tags = post.tags.all() 
+    # Update post metadata
+    posts = update_post_metadata(posts)
 
     return render(request, 'posts.html', {'posts': posts})
