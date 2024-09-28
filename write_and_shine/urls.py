@@ -23,6 +23,7 @@ urlpatterns = [
     path('', TemplateView.as_view(template_name='index.html'), name='home'),
     path('accounts/', include('accounts.urls')),
     path('', include('profiles.urls')),
-    path('', include('posts.urls')),
+    path('posts/', include('posts.urls')),
     path('', include('search.urls')),
+    path('', include('interactions.urls')),
 ]
