@@ -1,7 +1,6 @@
 from django.shortcuts import render
 from rest_framework.decorators import api_view
 from posts.models import Post, Tag
-from posts.serializers import PostSerializer
 
 # Create your views here.
 def index(request):

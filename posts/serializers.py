@@ -1,5 +1,7 @@
 from rest_framework import serializers
-from .models import Post, Tag, Comment, Like
+from .models import Post, Tag
+from interactions.models import Comment, Like
+
 
 class PostSerializer(serializers.ModelSerializer):
     class Meta:

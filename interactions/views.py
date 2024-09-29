@@ -2,7 +2,9 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from rest_framework.decorators import api_view
 
-from posts.models import Comment, Like, Post
+from posts.models import  Post
+from interactions.models import Comment, Like, Post
+
 
 
 @api_view(['GET'])
