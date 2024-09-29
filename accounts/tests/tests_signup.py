@@ -19,13 +19,15 @@ class SignupTests(TestCase):
         """Test successful signup."""
         response = self.client.post(reverse('signup_api'), self.user_data)
         expected_message = get_feedback_message('account_created', is_error=False)
+
         self.assertContains(response, expected_message, status_code=201)
 
     def test_signup_email_exists(self):
         """Test signup when email already exists."""
         self.User.objects.create_user(**self.user_data)
         response = self.client.post(reverse('signup_api'), self.user_data)
-        expected_message = get_feedback_message('email_exist', is_error=True)
+
+        expected_message = get_feedback_message('email_exist')
         self.assertContains(response, expected_message, status_code=409)
 
     def test_signup_email_string_case(self):
@@ -36,7 +38,8 @@ class SignupTests(TestCase):
         self.User.objects.create_user(**self.user_data)
         self.user_data['email'] = self.user_data['email'].upper()
         response = self.client.post(reverse('signup_api'), self.user_data)
-        expected_message = get_feedback_message('email_exist', is_error=True)
+
+        expected_message = get_feedback_message('email_exist')
         self.assertContains(response, expected_message, status_code=409)
 
     def test_signup_invalid_email(self):
@@ -44,7 +47,8 @@ class SignupTests(TestCase):
         invalid_user_data = self.user_data.copy()
         invalid_user_data['email'] = 'invalid-email'
         response = self.client.post(reverse('signup_api'), invalid_user_data)
-        expected_message = get_feedback_message('invalid_email_format', is_error=True)
+
+        expected_message = get_feedback_message('invalid_email_format')
         self.assertContains(response, expected_message, status_code=400)
 
     def test_signup_missing_name(self):
@@ -52,7 +56,8 @@ class SignupTests(TestCase):
         invalid_user_data = self.user_data.copy()
         invalid_user_data['name'] = ''
         response = self.client.post(reverse('signup_api'), invalid_user_data)
-        expected_message = get_feedback_message('name_required', is_error=True)
+
+        expected_message = get_feedback_message('name_required')
         self.assertContains(response, expected_message, status_code=400)
 
     def test_signup_short_password(self):
@@ -60,11 +65,13 @@ class SignupTests(TestCase):
         invalid_user_data = self.user_data.copy()
         invalid_user_data['password'] = 'Short1!'
         response = self.client.post(reverse('signup_api'), invalid_user_data)
-        expected_message = get_feedback_message('password_length', is_error=True)
+
+        expected_message = get_feedback_message('password_length')
         self.assertContains(response, expected_message, status_code=400)
 
     def test_signup_wrong_request_method(self):
         """Test sending a non-POST request to the signup API."""
         response = self.client.get(reverse('signup_api'))
-        expected_message = get_feedback_message('wrong_request', method='GET', is_error=True)
+
+        expected_message = get_feedback_message('wrong_request', expected='POST', received='GET')
         self.assertContains(response, expected_message, status_code=405)
