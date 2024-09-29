@@ -47,13 +47,3 @@ def search_post(request):
     posts = update_post_metadata(posts)
 
     return render(request, 'posts.html', {'posts': posts})
-
-
-@api_view(['GET'])
-def get_posts(request):
-    posts = Post.objects.all()
-
-    # Update post metadata
-    posts = update_post_metadata(posts)
-
-    return render(request, 'posts.html', {'posts': posts})

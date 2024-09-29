@@ -5,6 +5,8 @@ from rest_framework.decorators import api_view
 from posts.models import  Post, Tag
 from django.utils import timezone
 
+from search.views import update_post_metadata
+
 
 def index(request):
     return render(request, 'posts/index.html')  
@@ -42,6 +44,16 @@ def create_post(request):
 
     else:
         return HttpResponse("You should be logged in to create a post", status=403)
+    
+
+@api_view(['GET'])
+def get_posts(request):
+    posts = Post.objects.all()
+
+    # Update post metadata
+    posts = update_post_metadata(posts)
+
+    return render(request, 'posts.html', {'posts': posts})
 
 
 @api_view(['GET', 'POST'])
