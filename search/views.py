@@ -31,17 +31,7 @@ def search_post(request):
 
 @api_view(['GET'])
 def get_posts(request):
-    tag_name = request.GET.get('tag', '').strip().capitalize()  # Get tag from query parameter and capitalize
-
-    if tag_name:
-        tag = Tag.objects.filter(name=tag_name).first()
-
-        if tag:
-            posts = Post.objects.filter(tags=tag).distinct()  
-        else:
-            posts = Post.objects.none()
-    else:
-        posts = Post.objects.all()
+    posts = Post.objects.all()
 
     # Update post metadata
     posts = update_post_metadata(posts)
