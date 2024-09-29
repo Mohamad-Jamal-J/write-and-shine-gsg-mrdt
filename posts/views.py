@@ -2,6 +2,7 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
+from accounts.models import User
 from posts.models import  Post, Tag
 from django.utils import timezone
 
@@ -54,6 +55,17 @@ def get_posts(request):
     posts = update_post_metadata(posts)
 
     return render(request, 'posts.html', {'posts': posts})
+
+
+@api_view(['GET'])
+def get_user_posts(request, user_id):
+    user = get_object_or_404(User, id=user_id)
+    posts = Post.objects.filter(author=user)
+
+    posts = update_post_metadata(posts)
+
+    return render(request, 'posts.html', {'posts': posts, 'user': user})
+
 
 
 @api_view(['GET', 'POST'])
