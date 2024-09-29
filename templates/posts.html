@@ -13,11 +13,11 @@
         <button type="submit">Search</button>
     </form>
     
-    <form method="GET" action="{% url 'get_posts' %}">
+    {% comment %} <form method="GET" action="{% url 'get_posts' %}">
         <label for="tag">Enter a tag:</label>
         <input type="text" name="tag" placeholder="Type your tag here..." required>
         <button type="submit">Search</button>
-    </form>
+    </form> {% endcomment %}
 
     {% if posts %}
     <ul>
