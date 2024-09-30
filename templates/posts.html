@@ -8,6 +8,8 @@
 <body>
     <h1>Posts</h1>
 
+    <a href="{% url 'create_post' %}">Create post</a>
+
     <form method="GET" action="{% url 'search_post' %}">
         <input type="text" name="post_name" placeholder="Search for a post" required>
         <button type="submit">Search</button>

@@ -1,17 +1,16 @@
-from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
-from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from accounts.models import User
 from posts.models import  Post, Tag
 from django.utils import timezone
-
+from django.contrib import messages
 from search.views import update_post_metadata
 
 
 def index(request):
     return render(request, 'posts/index.html')  
 
+@api_view(['POST', 'GET'])
 def create_post(request):
     if request.user.is_authenticated:
         if request.method == 'POST':  # The user clicked the button to create a post
@@ -36,15 +35,16 @@ def create_post(request):
                 return redirect('get_posts')  
                 # If you want to redirect to the home page:
                 # return redirect('home')
-
-            return HttpResponse("The post data is not valid", status=400)
+            messages.error(request, "The post data is  invalid")
+            return redirect('get_posts')
 
         elif request.method == 'GET':
             # The form to create the post
             return render(request, 'create_post.html')
 
     else:
-        return HttpResponse("You should be logged in to create a post", status=403)
+        messages.error(request, "You should have an account and logged in to create a post")
+        return redirect('login_api')
     
 
 @api_view(['GET'])
@@ -75,7 +75,8 @@ def delete_edit_post(request, post_id):
 
         # Check if the authenticated user is the author of the post
         if post.author != request.user:
-            return Response({"message": "You do not have permission to edit or delete this post."}, status=403)
+            messages.error(request, "You do not have permission to edit or delete this post")
+            return redirect('get_posts')
 
         if request.method == 'GET':
             # Handle the edit action
@@ -113,4 +114,5 @@ def delete_edit_post(request, post_id):
             
             return redirect('get_posts') 
 
-    return HttpResponse("You should be logged in to delete/edit a post", status=403)
+    messages.error(request, "You should be logged in to delete/edit a post")
+    return redirect('login_api')
