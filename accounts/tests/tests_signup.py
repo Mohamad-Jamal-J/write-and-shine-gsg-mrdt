@@ -1,6 +1,7 @@
 from django.test import TestCase, Client
 from django.urls import reverse
 from django.contrib.auth import get_user_model
+from profiles.models import Profile
 from ..messages import get_feedback_message
 
 
@@ -21,6 +22,13 @@ class SignupTests(TestCase):
         expected_message = get_feedback_message('account_created', is_error=False)
 
         self.assertContains(response, expected_message, status_code=201)
+
+    def test_profile_created_on_signup(self):
+        """Test that a profile is created when a user successfully signs up."""
+        self.client.post(reverse('signup_api'), self.user_data)
+
+        user = self.User.objects.get(email=self.user_data['email'])
+        self.assertTrue(Profile.objects.filter(user=user).exists())
 
     def test_signup_email_exists(self):
         """Test signup when email already exists."""

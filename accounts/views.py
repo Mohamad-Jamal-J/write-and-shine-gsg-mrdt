@@ -3,7 +3,7 @@ from django.contrib.auth.hashers import check_password
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import get_user_model
 from .messages import get_feedback_message
-from .services import AccountService
+from .repository import AccountRepository
 from django.http import HttpResponse
 from django.shortcuts import render
 from string import punctuation
@@ -47,12 +47,12 @@ def signup_api(request) -> HttpResponse:
         return HttpResponse(error_message, status=400)
 
     # check if the email is already used or not in our system.
-    if AccountService.does_user_exists(email):
+    if AccountRepository.does_user_exists(email):
         error_message = get_feedback_message('email_exist')
         return HttpResponse(error_message, status=409)
 
     # create the account.
-    if AccountService.create_account(name, email, password):
+    if AccountRepository.create_account(name, email, password):
         success_message = get_feedback_message('account_created', False)
         return HttpResponse(success_message, status=201)
 
@@ -148,7 +148,7 @@ def delete_account_api(request):
     if error_message:
         return HttpResponse(error_message, status=405)
 
-    return AccountService.delete_account(user)
+    return AccountRepository.delete_account(user)
 
 
 @csrf_exempt
@@ -187,7 +187,7 @@ def change_password_api(request):
         error_message = get_feedback_message('same_password')
         return HttpResponse(error_message, status=400)
 
-    return AccountService.update_password(new_password, user)
+    return AccountRepository.update_password(new_password, user)
 
 
 def check_authenticated(request):

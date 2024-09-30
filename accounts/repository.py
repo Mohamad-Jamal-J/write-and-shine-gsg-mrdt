@@ -2,11 +2,12 @@ from django.contrib.auth.hashers import make_password
 from django.contrib.auth import get_user_model
 from .messages import get_feedback_message
 from django.http import HttpResponse
+from profiles.repository import ProfileRepository
 
 User = get_user_model()
 
 
-class AccountService:
+class AccountRepository:
     @staticmethod
     def create_account(name: str, email: str, password: str) -> bool:
         """
@@ -26,6 +27,7 @@ class AccountService:
             password=make_password(password)
         )
         user.save()
+        ProfileRepository.create_default_profile(user)
         return True
 
     @staticmethod
@@ -39,27 +41,10 @@ class AccountService:
         Returns:
             HttpResponse: A success message after account deletion.
         """
+        # ProfileRepository.delete_profile(user)
         user.delete()
         success_message = get_feedback_message('delete_successful', False)
         return HttpResponse(success_message, status=200)
-
-    # I'll get back to this method once we agree on the update functionality with the front
-    # @staticmethod
-    # def update_name(user, new_name: str):
-    #     """
-    #     Updates the user's name in the system.
-    #
-    #     Args:
-    #         user: The user whose name is being updated.
-    #         new_name (str): The new name to be set.
-    #
-    #     Returns:
-    #         HttpResponse: A success message after the name change.
-    #     """
-    #     user.name = new_name
-    #     user.save()
-    #     success_message = get_feedback_message('name_updated', False)
-    #     return HttpResponse(success_message, status=200)
 
     @staticmethod
     def update_password(new_password, user):
