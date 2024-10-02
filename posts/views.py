@@ -1,7 +1,7 @@
 from django.shortcuts import get_object_or_404, redirect, render
 from rest_framework.decorators import api_view
 from accounts.models import User
-from posts.models import  Post, Tag
+from posts.models import Post, Tag
 from django.utils import timezone
 from django.contrib import messages
 from search.views import update_post_metadata
@@ -9,6 +9,7 @@ from search.views import update_post_metadata
 
 def index(request):
     return render(request, 'posts/index.html')  
+
 
 @api_view(['POST', 'GET'])
 def create_post(request):
@@ -116,3 +117,17 @@ def delete_edit_post(request, post_id):
 
     messages.error(request, "You should be logged in to delete/edit a post")
     return redirect('login_api')
+
+
+# added this variation of get_user_posts (we'll agree on/delete it later)
+def get_user_posts_raw(request, user_id):
+    user = get_object_or_404(User, id=user_id)
+    posts = Post.objects.filter(author=user)
+    posts = update_post_metadata(posts)
+    return {
+        'posts': posts,
+        'user': {
+            'id': user.id,
+            'name': user.name
+        }
+    }
