@@ -1,23 +1,26 @@
+from django.contrib.auth import get_user_model
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from .models import Profile
 from .messages import get_feedback_message
+User = get_user_model()
 
 
 class ProfileRepository:
     @staticmethod
-    def get_profile(user):
+    def get_profile(user_id):
         """
         Retrieves the profile associated with the given user.
 
         Args:
-            user: The user whose profile is being retrieved.
+            user_id: The user id whose profile is being retrieved.
 
         Returns:
             Profile: The user's profile.
         """
         try:
+            user = get_object_or_404(User, id=user_id)
             return Profile.objects.get(user=user)
         except ObjectDoesNotExist:
             return None
