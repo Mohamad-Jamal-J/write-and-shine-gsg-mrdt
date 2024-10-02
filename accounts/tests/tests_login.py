@@ -22,8 +22,8 @@ class LoginTests(TestCase):
             'email': self.user_data['email'],
             'password': self.user_data['password']
         })
-        expected_message = get_feedback_message('login_successful', is_error=False)
-        self.assertContains(response, expected_message, status_code=200)
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('get_posts'))
 
     def test_login_wrong_password(self):
         """Test login with wrong password."""
@@ -32,8 +32,12 @@ class LoginTests(TestCase):
             'email': self.user_data['email'],
             'password': 'WrongPassword!'
         })
+        messages = list(response.context['messages'])
+
         expected_message = get_feedback_message('wrong_password')
-        self.assertContains(response, expected_message, status_code=401)
+
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(str(messages[0]), expected_message)
 
     def test_login_missing_password(self):
         """Test login with missing password."""
@@ -42,8 +46,12 @@ class LoginTests(TestCase):
             'email': self.user_data['email'],
             'password': ''
         })
+        messages = list(response.context['messages'])
+
         expected_message = get_feedback_message('password_required')
-        self.assertContains(response, expected_message, status_code=400)
+
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(str(messages[0]), expected_message)
 
     def test_login_invalid_email_format(self):
         """Test login with invalid email format."""
@@ -51,8 +59,12 @@ class LoginTests(TestCase):
             'email': 'invalid-email',
             'password': 'passwordTest!'
         })
+        messages = list(response.context['messages'])
+
         expected_message = get_feedback_message('invalid_email_format')
-        self.assertContains(response, expected_message, status_code=400)
+
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(str(messages[0]), expected_message)
 
     def test_login_already_logged_in(self):
         """Test login when already logged in."""
@@ -62,11 +74,15 @@ class LoginTests(TestCase):
             'email': self.user_data['email'],
             'password': self.user_data['password']
         })
-        expected_message = get_feedback_message('already_logged_in', name=self.user_data['name'])
-        self.assertContains(response, expected_message, status_code=403)
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('get_posts'))
 
     def test_login_wrong_request_method(self):
         """Test sending a non-POST request to the login API."""
-        response = self.client.get(reverse('login_api'))
-        expected_message = get_feedback_message('wrong_request', expected='POST', received='GET')
-        self.assertContains(response, expected_message, status_code=405)
+        response = self.client.delete(reverse('login_api'))
+        messages = list(response.context['messages'])
+
+        expected_message = get_feedback_message('wrong_request', expected=['POST', 'GET'], received='DELETE')
+
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(str(messages[0]), expected_message)

@@ -8,6 +8,15 @@
 <body>
     <h1>Posts</h1>
 
+    {% if user.is_authenticated %}
+        <h2>
+            <img src="{{ user.profile.profile_picture.url }}"
+                 alt="profile pic" style="vertical-align:middle; border-radius: 50%; border: 1px solid black;" width="50">
+            welcome {{ user.name }}
+            &nbsp;
+            <a href="{% url 'logout_api' %}">Logout</a>
+        </h2>
+    {% endif %}
     <a href="{% url 'create_post' %}">Create post</a>
 
     <form method="GET" action="{% url 'search_post' %}">

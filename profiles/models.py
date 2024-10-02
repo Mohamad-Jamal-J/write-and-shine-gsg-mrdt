@@ -13,17 +13,13 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
     headline = models.CharField(max_length=70, blank=True, default="")
     bio = models.TextField(blank=True, default="")
-    profile_picture = models.ImageField(upload_to='media/profile_pictures/', blank=True, null=True)
+    profile_picture = models.ImageField(default='profile_pictures/default.png', upload_to='profile_pictures', blank=True)
     education = models.CharField(max_length=255, blank=True, default="")
 
     def __str__(self):
         return f"{self.user.name}'s Profile"
 
     def save(self, *args, **kwargs):
-        if self.pk:
-            old_instance = Profile.objects.get(pk=self.pk)
-            if old_instance.profile_picture and old_instance.profile_picture != self.profile_picture:
-                if os.path.isfile(old_instance.profile_picture.path):
-                    os.remove(old_instance.profile_picture.path)
-
+        if not self.profile_picture or self.profile_picture == '':
+            self.profile_picture = 'profile_pictures/default.png'
         super().save(*args, **kwargs)
