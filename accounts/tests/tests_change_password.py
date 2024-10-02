@@ -32,8 +32,8 @@ class ChangePasswordTests(TestCase):
             'new_password': new_password
         })
 
-        expected_message = get_feedback_message('password_changed', False)
-        self.assertContains(response, expected_message, status_code=200)
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('get_posts'))
 
         # Verify the password was updated
         self.user.refresh_from_db()
@@ -47,8 +47,8 @@ class ChangePasswordTests(TestCase):
             'new_password': self.user_data['password']
         })
 
-        expected_message = get_feedback_message('same_password')
-        self.assertContains(response, expected_message, status_code=400)
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('get_posts'))
 
     def test_change_password_invalid_new_password(self):
         """Test trying to change the password with an invalid new password."""
@@ -60,8 +60,8 @@ class ChangePasswordTests(TestCase):
             'new_password': invalid_password
         })
 
-        expected_message = get_feedback_message('password_length')
-        self.assertContains(response, expected_message, status_code=400)
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('get_posts'))
 
     def test_change_password_incorrect_old_password(self):
         """Test trying to change the password with the wrong old password."""
@@ -70,9 +70,8 @@ class ChangePasswordTests(TestCase):
             'old_password': 'WrongPassword123!',
             'new_password': 'NewPassword123!'
         })
-
-        expected_message = get_feedback_message('wrong_password')
-        self.assertContains(response, expected_message, status_code=401)
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('get_posts'))
 
     def test_change_password_not_logged_in(self):
         """Test trying to change the password when not logged in."""
@@ -80,14 +79,17 @@ class ChangePasswordTests(TestCase):
             'old_password': self.user_data['password'],
             'new_password': 'NewPassword123!'
         })
+        messages = list(response.context['messages'])
 
         expected_message = get_feedback_message('not_logged')
-        self.assertContains(response, expected_message, status_code=401)
+
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(str(messages[0]), expected_message)
 
     def test_change_password_wrong_request_method(self):
         """Test trying to change the password with a non-POST request method."""
         self.client.login(email=self.user_data['email'], password=self.user_data['password'])
         response = self.client.get(self.change_password_url)
 
-        expected_message = get_feedback_message('wrong_request', expected='POST', received='GET')
-        self.assertContains(response, expected_message, status_code=405)
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('get_posts'))

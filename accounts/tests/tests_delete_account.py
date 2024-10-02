@@ -25,9 +25,12 @@ class DeleteAccountTests(TestCase):
         """Test successful account deletion."""
         self.client.login(email=self.user_data['email'], password=self.user_data['password'])
         response = self.client.delete(self.delete_account_url)
+        messages = list(response.context['messages'])
 
         expected_message = get_feedback_message('delete_successful', is_error=False)
-        self.assertContains(response, expected_message, status_code=200)
+
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(str(messages[0]), expected_message)
 
         self.assertFalse(self.User.objects.filter(email=self.user_data['email']).exists())
 
@@ -37,18 +40,21 @@ class DeleteAccountTests(TestCase):
         self.client.delete(self.delete_account_url)
 
         self.assertFalse(Profile.objects.filter(user=self.user).exists())
-
+#
     def test_delete_account_not_logged_in(self):
         """Test trying to delete account when not logged in."""
         response = self.client.delete(self.delete_account_url)
+        messages = list(response.context['messages'])
 
         expected_message = get_feedback_message('not_logged')
-        self.assertContains(response, expected_message, status_code=401)
+
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(str(messages[0]), expected_message)
 
     def test_delete_account_wrong_request_method(self):
         """Test trying to delete account with a non-DELETE request method."""
         self.client.login(email=self.user_data['email'], password=self.user_data['password'])
         response = self.client.get(self.delete_account_url)
 
-        expected_message = get_feedback_message('wrong_request', expected='DELETE', received='GET')
-        self.assertContains(response, expected_message, status_code=405)
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('get_posts'))

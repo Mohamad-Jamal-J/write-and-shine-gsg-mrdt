@@ -41,10 +41,8 @@ class AccountRepository:
         Returns:
             HttpResponse: A success message after account deletion.
         """
-        # ProfileRepository.delete_profile(user)
         user.delete()
-        success_message = get_feedback_message('delete_successful', False)
-        return HttpResponse(success_message, status=200)
+        return get_feedback_message('delete_successful', False)
 
     @staticmethod
     def update_password(new_password, user):
@@ -59,9 +57,8 @@ class AccountRepository:
             HttpResponse: A success message after password change.
         """
         user.set_password(new_password)
-        success_message = get_feedback_message('password_changed', False)
         user.save()
-        return HttpResponse(success_message, status=200)
+        return get_feedback_message('password_changed', False)
 
     @staticmethod
     def does_user_exists(email: str) -> bool:

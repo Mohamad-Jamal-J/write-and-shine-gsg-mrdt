@@ -1,11 +1,12 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.hashers import check_password
-from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import get_user_model
+from django.shortcuts import render, redirect
 from .messages import get_feedback_message
 from .repository import AccountRepository
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.contrib import messages
+from django.urls import reverse
 from string import punctuation
 import re
 
@@ -16,7 +17,6 @@ def index(request):
     return render(request, 'accounts/index.html')
 
 
-@csrf_exempt  # this will be deleted when we connect the front and back
 def signup_api(request) -> HttpResponse:
     """
     Handles user signup as an API endpoint.
@@ -25,42 +25,48 @@ def signup_api(request) -> HttpResponse:
         request: The HTTP request object.
 
     Returns:
-        HttpResponse: Contains success or error message.
+        HttpResponse: Renders the signup page with success or error message.
     """
     # if user is already logged in, return an error and redirect them to the home page
     error_message = check_authenticated(request)
     if error_message:
-        return HttpResponse(error_message, status=403)
+        messages.error(request, error_message)
+        return redirect(reverse('get_posts'))
 
-    error_message = validate_request_method(request, 'POST')
+    error_message = validate_request_method(request, ['POST', 'GET'])
     if error_message:
-        return HttpResponse(error_message, status=405)
+        messages.error(request, error_message)
+        return render(request, 'accounts/sign_up.html')
 
-    received_data = request.POST
-    name = received_data.get('name').strip()
-    email = received_data.get('email').strip().lower()
-    password = received_data.get('password')
+    if request.method == 'POST':
+        received_data = request.POST
+        name = received_data.get('name').strip()
+        email = received_data.get('email').strip().lower()
+        password = received_data.get('password')
 
-    # check for errors in the input.
-    error_message = check_for_invalid_inputs(name, email, password)
-    if error_message:
-        return HttpResponse(error_message, status=400)
+        # check for errors in the input.
+        error_message = check_for_invalid_inputs(name, email, password)
+        if error_message:
+            messages.error(request, error_message)
+            return render(request, 'accounts/sign_up.html')
 
-    # check if the email is already used or not in our system.
-    if AccountRepository.does_user_exists(email):
-        error_message = get_feedback_message('email_exist')
-        return HttpResponse(error_message, status=409)
+        # check if the email is already used or not in our system.
+        if AccountRepository.does_user_exists(email):
+            error_message = get_feedback_message('email_exist')
+            messages.error(request, error_message)
+            return render(request, 'accounts/sign_up.html')
 
-    # create the account.
-    if AccountRepository.create_account(name, email, password):
-        success_message = get_feedback_message('account_created', False)
-        return HttpResponse(success_message, status=201)
+        # create the account.
+        if AccountRepository.create_account(name, email, password):
+            success_message = get_feedback_message('account_created', False)
+            messages.success(request, success_message)
+            return redirect('login_api')
 
-    error_message = get_feedback_message('')
-    return HttpResponse(error_message, status=500)
+        error_message = get_feedback_message('')
+        messages.error(request, error_message)
+    return render(request, 'accounts/sign_up.html')
 
 
-@csrf_exempt
 def login_api(request) -> HttpResponse:
     """
     Handles user login as an API endpoint.
@@ -69,42 +75,48 @@ def login_api(request) -> HttpResponse:
         request: The HTTP request object.
 
     Returns:
-        HttpResponse: Contains success or error message.
+        HttpResponse: Renders the login page, with success or error message.
     """
     error_message = check_authenticated(request)
     if error_message:
-        return HttpResponse(error_message, status=403)
+        messages.error(request, error_message)
+        return redirect(reverse('get_posts'))
 
-    error_message = validate_request_method(request, 'POST')
+    error_message = validate_request_method(request, ['POST', 'GET'])
     if error_message:
-        return HttpResponse(error_message, status=405)
+        messages.error(request, error_message)
+        return render(request, 'accounts/login.html')
 
-    received_data = request.POST
-    email = received_data.get('email').strip().lower()
-    password = received_data.get('password')
+    if request.method == 'POST':
+        received_data = request.POST
+        email = received_data.get('email').strip().lower()
+        password = received_data.get('password')
 
-    # Validate email format
-    error_message = validate_email(email)
-    if error_message:
-        return HttpResponse(error_message, status=400)
+        # Validate email format
+        error_message = validate_email(email, True)
+        if error_message:
+            messages.error(request, error_message)
+            return render(request, 'accounts/login.html')
 
-    # Validate password presence
-    error_message = validate_password(password, False)
-    if error_message:
-        return HttpResponse(error_message, status=400)
+        # Validate password presence
+        error_message = validate_password(password, False)
+        if error_message:
+            messages.error(request, error_message)
+            return render(request, 'accounts/login.html')
 
-    # Attempt to authenticate the user
-    user = authenticate(request, email=email, password=password)
-    if user is not None:
-        login(request, user)
-        success_message = get_feedback_message('login_successful', False)
-        return HttpResponse(success_message, status=200)
+        # Attempt to authenticate the user
+        user = authenticate(request, email=email, password=password)
+        if user is not None:
+            login(request, user)
+            success_message = get_feedback_message('login_successful', False)
+            messages.success(request, success_message)
+            return redirect(reverse('get_posts'))
 
-    error_message = get_feedback_message('wrong_password')
-    return HttpResponse(error_message, status=401)
+        error_message = get_feedback_message('wrong_password')
+        messages.error(request, error_message)
+    return render(request, 'accounts/login.html')
 
 
-@csrf_exempt
 def logout_api(request) -> HttpResponse:
     """
     Handles user logout as an API endpoint.
@@ -113,22 +125,24 @@ def logout_api(request) -> HttpResponse:
         request: The HTTP request object.
 
     Returns:
-        HttpResponse: Contains success or error message.
+        HttpResponse: Renders the login page, with success or error message.
     """
     if not request.user.is_authenticated:
         error_message = get_feedback_message('not_logged')
-        return HttpResponse(error_message, status=401)
+        messages.error(request, error_message)
+        return render(request, 'accounts/login.html')
 
-    error_message = validate_request_method(request, 'POST')
+    error_message = validate_request_method(request, ['GET'])
     if error_message:
-        return HttpResponse(error_message, status=405)
+        messages.error(request, error_message)
+        return render(request, 'accounts/login.html')
 
     logout(request)
     success_message = get_feedback_message('logged_out', False)
-    return HttpResponse(success_message, status=200)
+    messages.success(request, success_message)
+    return render(request, 'accounts/login.html')
 
 
-@csrf_exempt
 def delete_account_api(request):
     """
     Handles user account deletion as an API endpoint.
@@ -141,17 +155,20 @@ def delete_account_api(request):
     """
     if not request.user.is_authenticated:
         error_message = get_feedback_message('not_logged')
-        return HttpResponse(error_message, status=401)
+        messages.error(request, error_message)
+        return render(request, 'accounts/login.html')
 
     user = request.user
-    error_message = validate_request_method(request, 'DELETE')
+    error_message = validate_request_method(request, ['DELETE'])
     if error_message:
-        return HttpResponse(error_message, status=405)
+        messages.error(request, error_message)
+        return redirect(reverse('get_posts'))
 
-    return AccountRepository.delete_account(user)
+    success_message = AccountRepository.delete_account(user)
+    messages.error(request, success_message)
+    return render(request, 'accounts/login.html')
 
 
-@csrf_exempt
 def change_password_api(request):
     """
     Handles password change as an API endpoint.
@@ -164,30 +181,37 @@ def change_password_api(request):
     """
     if not request.user.is_authenticated:
         error_message = get_feedback_message('not_logged')
-        return HttpResponse(error_message, status=401)
+        messages.error(request, error_message)
+        return render(request, 'accounts/login.html')
 
     user = request.user
     expected_old_password = user.password
-    error_message = validate_request_method(request, 'POST')
+    error_message = validate_request_method(request, ['POST'])
     if error_message:
-        return HttpResponse(error_message, status=405)
+        messages.error(request, error_message)
+        return redirect(reverse('get_posts'))
 
     received_data = request.POST
     old_password = received_data.get('old_password')
     new_password = received_data.get('new_password')
     if not check_password(old_password, expected_old_password):
         error_message = get_feedback_message('wrong_password')
-        return HttpResponse(error_message, status=401)
+        messages.error(request, error_message)
+        return redirect(reverse('get_posts'))
 
     error_message = validate_password(new_password)
     if error_message:
-        return HttpResponse(error_message, status=400)
+        messages.error(request, error_message)
+        return redirect(reverse('get_posts'))
 
     if new_password == old_password:
         error_message = get_feedback_message('same_password')
-        return HttpResponse(error_message, status=400)
+        messages.error(request, error_message)
+        return redirect(reverse('get_posts'))
 
-    return AccountRepository.update_password(new_password, user)
+    success_message = AccountRepository.update_password(new_password, user)
+    messages.success(request, success_message)
+    return redirect(reverse('get_posts'))
 
 
 def check_authenticated(request):
@@ -206,19 +230,19 @@ def check_authenticated(request):
     return None
 
 
-def validate_request_method(request, expected_method):
+def validate_request_method(request, expected_methods):
     """
     Validates that the HTTP request method matches the expected method.
 
     Args:
         request (HttpRequest): The HTTP request object containing method information.
-        expected_method (str): The expected HTTP method (e.g., 'POST', 'GET').
+        expected_methods (list): The expected HTTP methods (e.g., 'POST', 'GET').
 
     Returns:
         str: A feedback message indicating a method mismatch, or None if the method matches the expected one.
     """
-    if request.method != expected_method:
-        return get_feedback_message('wrong_request', expected=expected_method, received=request.method)
+    if request.method not in expected_methods:
+        return get_feedback_message('wrong_request', expected=expected_methods, received=request.method)
     return None
 
 
@@ -248,12 +272,13 @@ def check_for_invalid_inputs(name: str, email: str, password: str) -> str:
     return ''
 
 
-def validate_email(email: str) -> str:
+def validate_email(email: str, login_checks: bool = False) -> str:
     """
     Validates the given email address based on its format.
 
     Args:
         email (str): The email address to be validated.
+        login_checks (bool): If True add login validations, otherwise don't.
 
     Returns:
         str: An error message if the email is invalid, or an empty string if valid.
@@ -264,6 +289,9 @@ def validate_email(email: str) -> str:
     email_pattern = r'^[a-z0-9_.+-]+@[a-z0-9-]+\.[a-z0-9-.]+$'
     if not re.match(email_pattern, email):
         return get_feedback_message('invalid_email_format')
+
+    if login_checks and not AccountRepository.does_user_exists(email):
+        return get_feedback_message('account_not_found')
     return ''
 
 
