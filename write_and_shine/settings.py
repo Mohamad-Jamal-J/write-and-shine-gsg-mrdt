@@ -43,7 +43,8 @@ INSTALLED_APPS = [
     'profiles',
     'posts',
     'search',
-    'interactions'
+    'interactions',
+    
 ]
 
 MIDDLEWARE = [
@@ -61,7 +62,11 @@ ROOT_URLCONF = 'write_and_shine.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates']
+        'DIRS': [BASE_DIR / 'templates',
+                 BASE_DIR / 'accounts/templates',
+                 BASE_DIR / "profiles/templates",]
+        #'DIRS': [os.path.join(BASE_DIR,'templates')] 
+
         ,
         'APP_DIRS': True,
         'OPTIONS': {
@@ -132,3 +137,9 @@ MEDIA_URL = '/media/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+    BASE_DIR / "accounts/static",
+    BASE_DIR / "profiles/static",
+   
+]

@@ -8,7 +8,7 @@ from django.contrib import messages
 
 
 def index(request):
-    return render(request, 'profiles/index.html')
+    return render(request, 'profiles/profile.html')
 
 
 @login_required
