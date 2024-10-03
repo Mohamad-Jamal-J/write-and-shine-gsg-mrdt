@@ -1,0 +1,19 @@
+<header>
+    <div class="logo"> Write & Shine</div>
+    <nav>
+        <a href="#">Write</a>
+        <a href="#">Home</a>
+        <a href="{% url 'about' %}">About</a>
+        {% if user.is_authenticated %}
+        <div class="dropdown">
+            <a href="#"><i class="fas fa-user-circle user-icon"></i></a>
+            <div class="dropdown-content">
+                <a href="#">Profile</a>
+                <a href="{% url 'logout_api' %}">Logout</a>
+            </div>
+        </div>
+        {% else %}
+        <a href="{% url 'login_api' %}">Login</a>
+        {% endif %}
+    </nav>
+</header>

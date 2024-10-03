@@ -2,37 +2,46 @@
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>login</title>
     <link rel="stylesheet" href="{% static 'css/test.css' %}">
+    <link rel="stylesheet" href="{% static 'css/auth.css' %}">
+    <link rel="stylesheet" href="{% static 'css/header.css' %}">
+    <link rel="stylesheet" href="{% static 'css/footer.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
+
 <body>
-   <h1>Login</h1>
+    {% include 'components/header.html' %}
+    <div class="main-container">
+        <div class="container">
+            <div class="form-container">
+                <h1>Write & Shine</h1>
+                
+                {% include 'components/message.html'%}
 
-    {% if messages %}
-        <div class="messages">
-            {% for message in messages %}
-                <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
-                    {{ message }}
-                </div>
-            {% endfor %}
+                <form method="post" action="{% url 'login_api' %}">
+                    {% csrf_token %}
+                    <div class="input-group">
+                        <label>Email</label>
+                        <i class="fas fa-user icon1"></i>
+                        <input type="email" id="email" name="email" value="{{ email }}" placeholder="Enter your email"
+                            required>
+                    </div>
+                    <div class="input-group">
+                        <label>Password</label>
+                        <i class="fas fa-lock icon2"></i>
+                        <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                    </div>
+                    <button type="submit">Login</button>
+                    <p class="sign-link">Don't have an account? <a href="{% url 'signup_api' %}">Sign up now</a></p>
+                </form>
+            </div>
         </div>
-    {% endif %}
-
-    <form method="post" action="{% url 'login_api' %}">
-        {% csrf_token %}
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" value="{{ email }}">
-
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password">
-
-        <button type="submit">Login</button>
-    </form>
-       <a href="{% url 'signup_api' %}">Sign up</a>
-
-
-helooo
+    </div>
+    {% include 'components/footer.html' %}
 </body>
+
 </html>

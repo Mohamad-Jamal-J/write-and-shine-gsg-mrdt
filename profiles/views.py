@@ -6,7 +6,7 @@ from .messages import get_feedback_message
 
 
 def index(request):
-    return render(request, 'profiles/index.html')
+    return render(request, 'profiles/profile.html')
 
 
 @login_required

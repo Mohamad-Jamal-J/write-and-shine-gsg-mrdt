@@ -1,0 +1,66 @@
+.about-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+    width: 100%;
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 20px;
+}
+
+.about-content {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    padding: 40px;
+    /* Increase padding vertically */
+    width: 60%;
+    /* Increase card width */
+    margin-right: 80px;
+    /* Leave space between text and image */
+    margin-left: 40px;
+    /* Add margin to the left */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    /* Vertical alignment */
+}
+
+.about-image {
+    width: 40%;
+    /* Image width 40% */
+}
+
+.about-image img {
+    width: 100%;
+    /* Fit the image within the container */
+    border-radius: 8px;
+    /* Rounded corners for the image */
+}
+
+p {
+    color: #555;
+    line-height: 1.5;
+    margin-bottom: 20px;
+}
+
+.join-us {
+    background-color: #154c79;
+    /* Green */
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    font-size: 16px;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    align-self: flex-start;
+    /* Moves button to the right */
+    margin-left: 10px;
+}
+
+.join-us:hover {
+    background-color: #236398;
+    /* Darker green on hover */
+}
