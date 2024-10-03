@@ -16,6 +16,7 @@
 
     {% if user.is_authenticated %}
         <h2>
+            <a href="{% url 'get_profile' user.id %}">View Profile</a>
             <img src="{{ user.profile.profile_picture.url }}"
                  alt="profile pic" style="vertical-align:middle; border-radius: 50%; border: 1px solid black;" width="50">
             welcome {{ user.name }}
@@ -29,7 +30,7 @@
         <input type="text" name="post_name" placeholder="Search for a post" required>
         <button type="submit">Search</button>
     </form>
-    
+
     {% comment %} <form method="GET" action="{% url 'get_posts' %}">
         <label for="tag">Enter a tag:</label>
         <input type="text" name="tag" placeholder="Type your tag here..." required>
@@ -41,7 +42,7 @@
         {% for post in posts %}
             <li>
                 <h2>{{ post.title }}</h2>
-                <p>Tags: 
+                <p>Tags:
                     {% for tag in post.post_tags %}
                         {{ tag.name }}{% if not forloop.last %}, {% endif %}
                     {% endfor %}
@@ -55,14 +56,14 @@
 
                 <form method="POST" action="{% url 'delete_edit_post' post.id %}" style="display:inline;">
                     {% csrf_token %}
-                    <input type="hidden" name="delete" value="true"> 
+                    <input type="hidden" name="delete" value="true">
                     <button type="submit">Delete</button>
                 </form>
-                
-                
+
+
                 <a href="{% url 'delete_edit_post' post.id %}?edit=true">Edit</a>
                 <a href="{% url 'like_post' post.id %}">Like</a>
-                
+
                 <!-- Comment Section -->
                 <h3>Leave a Comment:</h3>
                 <form method="POST" action="{% url 'comment_post' post.id %}">
@@ -70,12 +71,12 @@
                     <textarea name="body" placeholder="Write your comment here..." required></textarea>
                     <button type="submit">Comment</button>
                 </form>
-                
+
                 <h4>Comments:</h4>
                 <ul>
                     {% for comment in post.comment_set.all %}
                         <li>
-                            <strong>{{ comment.author.name }}:</strong> {{ comment.body }} 
+                            <strong>{{ comment.author.name }}:</strong> {{ comment.body }}
                             <em>at {{ comment.created_at }}</em>
 
                             {% if comment.author == request.user %}
@@ -84,7 +85,7 @@
                                     {% csrf_token %}
                                     <button type="submit">Delete</button>
                                 </form>
-                                
+
                             {% endif %}
                         </li>
                     {% empty %}

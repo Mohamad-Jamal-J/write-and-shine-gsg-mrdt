@@ -1,14 +1,16 @@
 from django.shortcuts import get_object_or_404, redirect, render
 from rest_framework.decorators import api_view
 from accounts.models import User
-from posts.models import  Post, Tag
+from posts.models import Post, Tag
 from django.utils import timezone
 from django.contrib import messages
-from search.views import update_post_metadata
+from posts.repository import PostRepository
+from posts.services import update_post_metadata
 
 
 def index(request):
     return render(request, 'posts/index.html')  
+
 
 @api_view(['POST', 'GET'])
 def create_post(request):
@@ -22,30 +24,20 @@ def create_post(request):
             tags = [tag.strip().capitalize() for tag in tags_input.split(',') if tag.strip()]
 
             if title and body:
-                post = Post.objects.create(
-                    title=title,
-                    body=body,
-                    author=request.user  # Set the logged-in user as the author
-                )
+                PostRepository.create_post(title, body, request.user, tags)
+                return redirect('get_posts')
 
-                for tag_name in tags:
-                    tag, created = Tag.objects.get_or_create(name=tag_name)  # Get or create the tag
-                    post.tags.add(tag)  # Associate the tag with the post using the ManyToManyField
-
-                return redirect('get_posts')  
-                # If you want to redirect to the home page:
-                # return redirect('home')
-            messages.error(request, "The post data is  invalid")
+            messages.error(request, "The post data is invalid")
             return redirect('get_posts')
 
         elif request.method == 'GET':
-            # The form to create the post
+            # Render the form to create a post
             return render(request, 'create_post.html')
 
     else:
-        messages.error(request, "You should have an account and logged in to create a post")
+        messages.error(request, "You should have an account and be logged in to create a post")
         return redirect('login_api')
-    
+
 
 @api_view(['GET'])
 def get_posts(request):
@@ -60,8 +52,7 @@ def get_posts(request):
 @api_view(['GET'])
 def get_user_posts(request, user_id):
     user = get_object_or_404(User, id=user_id)
-    posts = Post.objects.filter(author=user)
-
+    posts = PostRepository.get_user_posts(user_id)
     posts = update_post_metadata(posts)
 
     return render(request, 'posts.html', {'posts': posts, 'user': user})
@@ -116,3 +107,17 @@ def delete_edit_post(request, post_id):
 
     messages.error(request, "You should be logged in to delete/edit a post")
     return redirect('login_api')
+
+
+# added this variation of get_user_posts (we'll agree on/delete it later)
+def get_user_posts_raw(request, user_id):
+    user = get_object_or_404(User, id=user_id)
+    posts = Post.objects.filter(author=user)
+    posts = update_post_metadata(posts)
+    return {
+        'posts': posts,
+        'user': {
+            'id': user.id,
+            'name': user.name
+        }
+    }

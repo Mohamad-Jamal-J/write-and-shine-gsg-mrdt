@@ -1,8 +1,10 @@
 from django.contrib.auth.decorators import login_required
-from django.http import JsonResponse
+from django.urls import reverse
+from posts.views import get_user_posts_raw
 from .repository import ProfileRepository
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .messages import get_feedback_message
+from django.contrib import messages
 
 
 def index(request):
@@ -14,59 +16,53 @@ def create_or_update_profile(request):
     """
     Handle the creation or update of a user's profile.
     """
+    user = request.user
     if request.method != 'POST':
         error_message = get_feedback_message('invalid_request_method', expected='POST')
-        return JsonResponse({'error': error_message}, status=400)
+        messages.error(request, error_message)
+        return redirect('get_profile', user.id)
 
-    user = request.user
+    headline = request.POST.get('headline', '')
     bio = request.POST.get('bio', '')
     education = request.POST.get('education', '')
     profile_picture = request.FILES.get('profile_picture')
 
     response = ProfileRepository.create_or_update_profile(
         user=user,
+        headline=headline,
         bio=bio,
         education=education,
         profile_picture=profile_picture
     )
+    # success_message = messages.get_messages(response)
+    # messages.success(response, success_message)
+    return redirect('get_profile', user.id)
 
-    success_message = get_feedback_message('profile_updated', name=user.name)
-    return JsonResponse({'message': success_message}, status=200)
 
-
-@login_required
-def get_profile(request):
+def get_profile(request, user_id: int):
     """
     Retrieve the user's profile details.
     """
-    user = request.user
-    profile = ProfileRepository.get_profile(user)
+    user_posts_data = get_user_posts_raw(request, user_id)
+
+    user = user_posts_data.get('user', {})
+    posts = user_posts_data.get('posts', [])
+
+    profile = ProfileRepository.get_profile(user_id)
 
     if profile is None:
-        error_message = get_feedback_message('profile_not_found', name=user.name)
-        return JsonResponse({'error': error_message}, status=404)
+        error_message = get_feedback_message('profile_not_found', id=user_id)
+        messages.error(request, error_message)
+        return redirect(reverse('get_posts'))
 
     profile_data = {
+        'id': user.get('id'),
+        'name': user.get('name'),
+        'headline': profile.headline,
         'bio': profile.bio,
         'education': profile.education,
-        'profile_picture': profile.profile_picture.url if profile.profile_picture else None
+        'profile_picture': profile.profile_picture.url,
+        'is_owner': request.user.is_authenticated and request.user.id == user_id,
+        'posts': posts
     }
-
-    success_message = get_feedback_message('profile_fetched', name=user.name)
-    return JsonResponse({'message': success_message, 'profile': profile_data}, status=200)
-
-
-@login_required
-def delete_profile(request):
-    """
-    Handle the deletion of a user's profile.
-    """
-    if request.method != 'DELETE':
-        error_message = get_feedback_message('invalid_request_method', expected='DELETE')
-        return JsonResponse({'error': error_message}, status=400)
-
-    user = request.user
-    response = ProfileRepository.delete_profile(user)
-
-    success_message = get_feedback_message('profile_deleted', name=user.name)
-    return JsonResponse({'message': success_message}, status=200)
+    return render(request, 'profiles/profile.html', profile_data)

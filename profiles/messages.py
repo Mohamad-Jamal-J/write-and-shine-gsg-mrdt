@@ -7,6 +7,8 @@ SUCCESS_MESSAGES = {
 ERROR_MESSAGES = {
     # request method - related error messages
     'wrong_request': 'Request method not allowed. Expected {expected}, but received {received}',
+
+    'profile_not_found': 'No profile found for {id}'
 }
 
 
