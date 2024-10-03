@@ -2,21 +2,11 @@ from django.shortcuts import render
 from rest_framework.decorators import api_view
 from posts.models import Post, Tag
 from django.db.models import Q
+from posts.services import update_post_metadata
 
 # Create your views here.
 def index(request):
     return render(request, 'search/index.html')
-
-
-def update_post_metadata(posts):
-    """
-    Update each post's likes count, comments count, and tags.
-    """
-    for post in posts:
-        post.likes_count = post.like_set.count()
-        post.comments_count = post.comment_set.count()
-        post.post_tags = post.tags.all()
-    return posts
 
 
 @api_view(['GET'])

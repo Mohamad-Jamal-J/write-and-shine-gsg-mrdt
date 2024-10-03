@@ -4,7 +4,7 @@ from accounts.models import User
 from posts.models import Post, Tag
 from django.utils import timezone
 from django.contrib import messages
-from search.views import update_post_metadata
+from posts.services import update_post_metadata
 
 
 def index(request):
