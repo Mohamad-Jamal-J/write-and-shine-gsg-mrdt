@@ -3,7 +3,7 @@ from django.urls import reverse
 from posts.views import get_user_posts_raw
 from .services import ProfileService
 from django.shortcuts import render, redirect
-from .messages import get_feedback_message
+from .messages import message_handler
 from django.contrib import messages
 
 
@@ -18,7 +18,7 @@ def create_or_update_profile(request):
     """
     user = request.user
     if request.method != 'POST':
-        error_message = get_feedback_message('invalid_request_method', expected='POST')
+        error_message = message_handler.get('invalid_request_method', expected='POST')
         messages.error(request, error_message)
         return redirect('get_profile', user.id)
 
@@ -51,7 +51,7 @@ def get_profile(request, user_id: int):
     profile = ProfileService.get_profile(user_id)
 
     if profile is None:
-        error_message = get_feedback_message('profile_not_found', id=user_id)
+        error_message = message_handler.get('profile_not_found', id=user_id)
         messages.error(request, error_message)
         return redirect(reverse('get_posts'))
 

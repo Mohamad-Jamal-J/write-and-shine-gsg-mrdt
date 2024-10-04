@@ -2,7 +2,7 @@ from django.test import TestCase, Client
 from django.urls import reverse
 from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import check_password
-from ..messages import get_feedback_message
+from ..messages import message_handler
 
 
 class ChangePasswordTests(TestCase):
@@ -81,7 +81,7 @@ class ChangePasswordTests(TestCase):
         })
         messages = list(response.context['messages'])
 
-        expected_message = get_feedback_message('not_logged')
+        expected_message = message_handler.get('not_logged')
 
         self.assertEqual(len(messages), 1)
         self.assertEqual(str(messages[0]), expected_message)

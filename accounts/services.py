@@ -1,6 +1,6 @@
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth import get_user_model
-from .messages import get_feedback_message
+from .messages import message_handler
 from django.http import HttpResponse
 from profiles.services import ProfileService
 
@@ -42,7 +42,7 @@ class AccountService:
             HttpResponse: A success message after account deletion.
         """
         user.delete()
-        return get_feedback_message('delete_successful', False)
+        return message_handler.get('delete_successful', False)
 
     @staticmethod
     def update_password(new_password, user):
@@ -58,7 +58,7 @@ class AccountService:
         """
         user.set_password(new_password)
         user.save()
-        return get_feedback_message('password_changed', False)
+        return message_handler.get('password_changed', False)
 
     @staticmethod
     def does_user_exists(email: str) -> bool:
