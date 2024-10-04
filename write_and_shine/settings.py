@@ -64,9 +64,10 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [BASE_DIR / 'templates',
                  BASE_DIR / 'accounts/templates',
-                 BASE_DIR / "profiles/templates",]
-        #'DIRS': [os.path.join(BASE_DIR,'templates')] 
-
+                 BASE_DIR / "profiles/templates",
+                 BASE_DIR / "posts/templates",
+                 BASE_DIR / "interactions/templates",]
+       
         ,
         'APP_DIRS': True,
         'OPTIONS': {
@@ -141,5 +142,7 @@ STATICFILES_DIRS = [
     BASE_DIR / "static",
     BASE_DIR / "accounts/static",
     BASE_DIR / "profiles/static",
+    BASE_DIR / "posts/static",
+    BASE_DIR / "interactions/static",
    
 ]

@@ -5,8 +5,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Posts</title>
+    <link rel="stylesheet" href="{% static 'css/blog.css' %}">
     <link rel="stylesheet" href="{% static 'css/header.css' %}">
+    <link rel="stylesheet" href="{% static 'css/footer.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Tangerine">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Trirong">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
     <script src="https://kit.fontawesome.com/a076d05399.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
@@ -24,6 +33,12 @@
             <a href="{% url 'logout_api' %}">Logout</a>
         </h2>
     {% endif %}
+
+    <section class="right-section">
+
+        {% include 'posts/post.html' %}
+    </section>
+
     <a href="{% url 'create_post' %}">Create post</a>
 
     <form method="GET" action="{% url 'search_post' %}">
@@ -99,7 +114,12 @@
     <p>No posts available.</p>
 {% endif %}
 <script src="{% static 'js/header.js' %}">
+    
  
 </script>
+<script src="{% static 'js/blo.js' %}">
+
+</script>
+    <script src="{% static 'js/newprofile.js' %}" defer></script>
 </body>
 </html>

@@ -32,7 +32,7 @@ def create_post(request):
 
         elif request.method == 'GET':
             # Render the form to create a post
-            return render(request, 'create_post.html')
+            return render(request, 'posts/create_post.html')
 
     else:
         messages.error(request, "You should have an account and be logged in to create a post")
@@ -46,7 +46,7 @@ def get_posts(request):
     # Update post metadata
     posts = update_post_metadata(posts)
 
-    return render(request, 'posts.html', {'posts': posts})
+    return render(request, 'home.html', {'posts': posts})
 
 
 @api_view(['GET'])
@@ -55,7 +55,7 @@ def get_user_posts(request, user_id):
     posts = PostRepository.get_user_posts(user_id)
     posts = update_post_metadata(posts)
 
-    return render(request, 'posts.html', {'posts': posts, 'user': user})
+    return render(request, 'user.html', {'posts': posts, 'user': user})
 
 
 
@@ -72,9 +72,9 @@ def delete_edit_post(request, post_id):
         if request.method == 'GET':
             # Handle the edit action
             if 'edit' in request.GET:
-                return render(request, 'post_edit.html', {'post': post})
+                return render(request, 'posts/edit_page.html', {'post': post})
             else:
-                return render(request, 'posts.html', {'post': post})
+                return render(request, 'home.html', {'post': post})
 
         elif request.method == 'POST':
             # Check if the form indicates deletion

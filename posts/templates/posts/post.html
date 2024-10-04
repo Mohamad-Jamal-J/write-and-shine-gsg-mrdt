@@ -1,0 +1,35 @@
+{% if posts %}
+<div id="cards-container" class="cards">
+    <p>Number of posts: {{ posts|length }}</p> <!-- Debugging line -->
+    {% for post in posts %}
+    <div class="card" data-tags="{{ post.post_tags|join:','|lower }}">
+        <div class="profile">
+            <i class="fas fa-user"></i>
+        </div>
+        <div class="card-content">
+            <div class="user-details">
+                <h2>{{ post.author.name }}</h2>
+                <span class="post-time">{{ post.created_at }}</span>
+            </div>
+            <p class="short-content"><strong>{{ post.title }}</strong></p>
+            <p class="full-content" style="display: none;">{{ post.body }}</p>
+            <a href="#" class="read-more">Read More <i class="fas fa-arrow-right"></i></a>
+            {% if post.author == request.user %}
+            {% include 'posts/edit_post.html' %}
+            {% endif %}
+
+            <!-- Tags Section -->
+            <div class="tags">
+                {% for tag in post.post_tags %}
+                <span class="tag">{{ tag.name }}</span>
+                {% endfor %}
+            </div>
+
+            {% include 'interactions/comment.html'%}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<p>No posts available.</p>
+{% endif %}

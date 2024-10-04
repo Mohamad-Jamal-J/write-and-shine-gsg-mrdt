@@ -1,0 +1,22 @@
+.fas.fa-minus {
+    font-size: 20px;
+    color: #154c79; /* Optional: set a color */
+    margin-left: 5px; /* Optional: add some space */
+}
+.delete-post {
+    background: #154c79;        /* Remove background color */
+    border: none;            /* Remove border */
+    padding: 0;             /* Remove padding */
+    cursor: pointer;         /* Change cursor to pointer on hover */
+    outline: none;           /* Remove outline */
+}
+
+.delete-post i {
+    color: #007bff; /* Set the icon color to blue */
+    font-size: 24px; /* Adjust the icon size as needed */
+    transition: color 0.3s ease; /* Transition effect for color change */
+}
+
+.delete-post i:hover {
+    color: #0056b3; /* Darker blue on hover */
+}

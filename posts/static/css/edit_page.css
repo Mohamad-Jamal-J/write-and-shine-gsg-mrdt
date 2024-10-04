@@ -1,0 +1,134 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+.body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 80vh;
+}
+
+.post-container {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 600px;
+    
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.user-info i {
+    font-size: 24px;
+    margin-right: 10px;
+}
+
+.user-name {
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.post-input {
+    width: 80%;
+    height: 150px;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    resize: none;
+}
+
+.tags-info {
+    margin-bottom: 10px;
+}
+
+.tags-input {
+    width: 80%;
+    padding: 5px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+.tags-input2{
+    width: 80%;
+    padding: 5px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+
+}
+
+.post-button {
+    width: 50%;
+    padding: 10px;
+    margin-top: 10px;
+    background-color: #154c79;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.post-button:hover {
+    background-color: #0056b3;
+}
+.tags-container {
+    display: flex; /* Use flexbox to arrange tags in a row */
+    flex-wrap: wrap; /* Allow wrapping of tags if they exceed the width */
+    gap: 10px; /* Space between tags */
+    margin-top: 10px; /* Space above tags */
+}
+
+.tag-item {
+    background-color: #e0e7ff; /* Light blue background */
+    padding: 8px 12px; /* Padding inside tag */
+    border-radius: 5px; /* Rounded corners */
+    display: flex; /* Flexbox for inline layout */
+    align-items: center; /* Center items vertically */
+}
+
+.tag-name {
+    margin-right: 10px; /* Space between tag name and delete button */
+    font-weight: bold; /* Bold text for tag name */
+}
+
+.delete-button {
+    background-color: #ff4d4d; /* Red background for delete button */
+    color: #fff; /* White text */
+    border: none; /* No border */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor on hover */
+    padding: 4px 8px; /* Padding inside button */
+    transition: background-color 0.3s; /* Smooth transition for hover effect */
+}
+
+.delete-button:hover {
+    background-color: #ff1a1a; /* Darker red on hover */
+}
+.post-action-buttons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+
+.cancel-link {
+    text-decoration: none; /* Remove underline from link */
+    color: #007bff; /* Match color with the button */
+    padding: 10px;
+    font-size: 14px;
+    cursor: pointer; /* Pointer cursor on hover */
+}
+
+.cancel-link:hover {
+    color: #0056b3; /* Darken color on hover */
+}

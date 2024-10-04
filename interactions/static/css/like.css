@@ -1,0 +1,17 @@
+.like-btn {
+    color: grey; /* Default color for unliked state */
+    cursor: pointer; /* Show pointer on hover */
+    border: none; /* Remove default button border */
+    background: none; /* Remove default button background */
+    
+    transition: color 0.3s ease; /* Smooth transition when color changes */
+}
+.like-btn i {
+    margin-left: 5px; /* Adds a small gap between the text and the icon */
+}
+.like-btn.liked {
+    color: blue; /* Change to blue when clicked */
+}
+.like-count {
+    margin-right: 2px; /* Adds a gap between the like count and the icon/text */
+}

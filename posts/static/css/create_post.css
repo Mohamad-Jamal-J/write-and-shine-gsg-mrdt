@@ -1,0 +1,97 @@
+
+/* Create Post Modal Styling */
+.create-post-modal {
+    display: none; /* Hidden by default */
+    position: fixed; 
+    z-index: 1; 
+    padding-top: 100px; 
+    left: 0;
+    top: 0;
+    width: 100%; 
+    height: 100%; 
+    overflow: auto; 
+    background-color: rgba(0, 0, 0, 0.4); /* Black background with transparency */
+}
+
+.create-post-modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 600px;
+    border-radius: 8px;
+}
+
+.create-post-close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.create-post-close:hover,
+.create-post-close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.create-post-container {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 400px;
+}
+
+.create-post-user-info {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.create-post-user-info i {
+    font-size: 24px;
+    margin-right: 10px;
+}
+
+.create-post-user-name {
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.create-post-input {
+    width: 100%;  /* Adjust to 100% of parent */
+    height: 200px; /* Set a specific height */
+    resize: both;  /* Allow manual resizing */
+    padding: 10px; /* Optional: add padding for better aesthetics */
+    border: 1px solid #ccc; /* Optional: add a border */
+    border-radius: 4px; /* Optional: round the corners */
+}
+
+.create-post-tags-info {
+    margin-bottom: 10px;
+}
+
+.create-post-tags-input {
+    width: 80%;
+    padding: 5px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.create-post-button {
+    width: 50%;
+    padding: 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.create-post-button:hover {
+    background-color: #0056b3;
+}
