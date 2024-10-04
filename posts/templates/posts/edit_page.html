@@ -1,0 +1,53 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post Page</title>
+    <link rel="stylesheet" href="{% static 'css/edit_page.css' %}">
+    <link rel="stylesheet" href="{% static 'css/header.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    {% include 'components/header.html' %}
+    <h2>Edit Post</h2>
+    <div class="body">
+        
+    <div class="post-container" >
+        
+        <div class="user-info">
+            <i class="fas fa-user"></i>
+            <span class="user-name">{{ user.name }}</span>
+        </div>
+        <br>
+        <form method="POST" action="{% url 'delete_edit_post' post.id %}">
+            {% csrf_token %}  <!-- Make sure to include CSRF token -->
+            <h3>Title</h3>
+            <input type="text" id="title" name="title" value="{{ post.title }}" required placeholder="Add title" class="tags-input2">
+            <textarea class="post-input" placeholder="What do you want to talk about?" id="body" name="body" required>{{ post.body }}</textarea>
+            <div class="tags-info">
+                <small>Help people find your blog easily by adding tags</small>
+                <div class="tags-container">
+                    {% for tag in post.tags.all %}
+                        <div class="tag-item">
+                            <span class="tag-name">{{ tag.name }}</span>
+                            <button type="submit" name="delete_tag" value="{{ tag.id }}" class="delete-button">Delete</button>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <input type="text" id="new_tag" name="new_tag" placeholder="Add tags" class="tags-input">
+            <br>
+            <small>You can add up to 3 tags</small>
+            <br>
+            <div class="post-action-buttons">
+                <button type="submit" class="post-button">Update Post</button>
+                <a href="{% url 'get_posts' %}" class="cancel-link">Cancel</a>
+            </div>
+            
+        </form>
+    </div>
+</body>
+</html>

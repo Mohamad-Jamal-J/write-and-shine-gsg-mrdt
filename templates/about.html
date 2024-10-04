@@ -9,6 +9,7 @@
     {% block head %}
     <link rel="stylesheet" href="{% static 'css/header.css' %}">
     <link rel="stylesheet" href="{% static 'css/about.css' %}">
+    <link rel="stylesheet" href="{% static 'css/create_post.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
     {% endblock %}
@@ -41,13 +42,23 @@
                 <p>Our goal is to build a vibrant community that fosters learning and creativity, keeping you updated
                     with the latest trends and knowledge.</p>
             </section>
+            {% if user.is_authenticated %}
+            <p>Welcome, {{ user.username }}!</p>
+            {% else %}
             <button class="join-us" onclick="redirectToSignUp()">Join Us</button>
+            {% endif %}
+
 
         </div>
         <div class="about-image">
             <img src="{% static 'img/about.jpg' %}" alt="About Us Image">
         </div>
     </div>
+    <script src="{% static 'js/header.js' %}">
+    </script>
+    <script src="{% static 'js/create_post.js' %}" defer>
+    </script>
+
 </body>
 
 </html>

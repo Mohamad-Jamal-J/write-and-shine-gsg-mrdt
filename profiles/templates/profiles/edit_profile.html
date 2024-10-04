@@ -1,0 +1,20 @@
+<div id="editProfileModal" class="profile-modal">
+    <div class="profile-modal-content">
+        <span class="close">&times;</span>
+        <h2>Update Profile Information</h2>
+        <form id="editProfileForm" method="POST" action="{% url 'update_profile' %}" enctype="multipart/form-data">
+            {% csrf_token %}
+           
+            <label for="headline">Headline</label>
+            <input type="text" id="headline" name="headline" value="{{ headline }}">
+            <label for="education">Education</label>
+            <input type="text" id="education" name="education" value="{{ education }}">
+            <label for="bio">Bio:</label>
+            <textarea id="bio" name="bio">{{bio}}</textarea>
+            <label for="profile_picture">Profile Picture:</label><br>
+            <input type="file" id="profile_picture" name="profile_picture"><br><br>
+            <button type="submit" value="Save Changes" >Save Changes</button>
+            
+        </form>
+    </div>
+</div>

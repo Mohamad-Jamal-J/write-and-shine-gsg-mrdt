@@ -1,0 +1,7 @@
+<div class="post-actions1">
+    <a href="{% url 'delete_edit_post' post.id %}?edit=true"  class="edit-post">
+        <i class="fas fa-pencil-alt" aria-hidden="true" alt="Edit Post"></i>
+    </a>
+    {% include 'posts/delete_post.html' %}
+</div>
+

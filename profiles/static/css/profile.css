@@ -1,0 +1,264 @@
+/* Basic Reset for margins, padding, and box sizing */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body Styling */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Navigation Bar Styling */
+
+
+/* Main Content */
+main {
+    display: flex;
+    flex: 1;
+    padding: 20px;
+    justify-content: space-between;
+}
+
+/* Post section styling */
+.posts-section {
+    width: 65%;
+}
+
+.posts-section h1 {
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+}
+
+.sort-by {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 20px;
+}
+
+.sort-by button {
+    background-color: #ddd;
+    padding: 8px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.sort-by button i {
+    margin-left: 5px;
+}
+
+.post-card {
+    display: flex;
+    background-color: white;
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    overflow: hidden;
+    transition: all 0.3s ease; 
+}
+
+.post-card.expanded .comment-section {
+    display: block; 
+}
+
+.profile-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #eee;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 15px;
+}
+
+.profile-icon i {
+    font-size: 1.5rem;
+    color: #666;
+}
+
+.post-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.post-content p {
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+}
+
+.post-content a {
+    color: #5BC0DE;
+    text-decoration: none;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* Sidebar styling */
+.sidebar {
+    width: 30%;
+    height: 500px;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    position: relative; /* Sidebar as a positioning context */
+}
+
+.user-info-container {
+    position: relative; /* Positioning context for edit icon */
+}
+
+.user-info {
+    text-align: center;
+}
+
+.profile-large {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background-color: #eee;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto 20px;
+}
+
+.profile-large i {
+    font-size: 3rem;
+    color: #666;
+}
+
+.user-info h2 {
+    margin-bottom: 10px;
+}
+
+.user-info p {
+    margin-bottom: 10px;
+}
+
+/* Edit icon button styling */
+.edit-icon {
+    cursor: pointer;
+    position: absolute; /* Position edit icon absolutely */
+    top: 10px; /* Distance from the top */
+    right: 10px; /* Distance from the right */
+    background: none; /* No background for edit icon */
+    border: none; /* No border for edit icon */
+    padding: 0; /* Remove padding */
+}
+
+.edit-icon i {
+    font-size: 1.5rem; /* Adjust icon size */
+    color: #5BC0DE; /* Color for the icon */
+}
+
+/* Modal Window Styling */
+/* Profile Modal styles */
+.profile-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+}
+
+/* Profile Modal content styling */
+.profile-modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    width: 400px;
+    max-width: 90%;
+    position: relative;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Form styles within the profile modal */
+.profile-modal-content form {
+    display: flex;
+    flex-direction: column;
+}
+
+.profile-modal-content label {
+    margin: 10px 0 5px;
+    font-weight: bold; 
+}
+
+.profile-modal-content input,
+.profile-modal-content textarea {
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    margin-bottom: 15px; 
+    width: 100%; 
+    box-sizing: border-box; 
+    resize: none; /* Apply for both input and textarea */
+}
+
+/* Textarea specific styling */
+.profile-modal-content textarea {
+    height: 100px; 
+}
+
+/* Button styles */
+button.saveProfileChanges, button#saveProfileChanges {
+    background-color: #5BC0DE; 
+    color: white; 
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    display: block; 
+    margin: 0 auto; 
+    width: 150px; 
+    text-align: center; 
+}
+
+button.saveProfileChanges:hover, button#saveProfileChanges:hover {
+    background-color: #007bff; 
+}
+
+/* Close button styling */
+.close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    cursor: pointer;
+    font-size: 1.5rem; 
+    color: #999; 
+}
+
+.close:hover {
+    color: #333; 
+}
+
+/* Icon hover effects */
+.edit-icon2:hover {
+    color: #007bff; 
+}
+
+.fa-comment:hover {
+    color: #5BC0DE;
+}
+
+/*for post edit*/
+
+
+
+
+

@@ -1,0 +1,26 @@
+<!-- Create Post Modal -->
+<div id="createPostModal" class="create-post-modal">
+    <div class="create-post-modal-content">
+        <span class="create-post-close">&times;</span>
+        <div class="create-post-container">
+            <div class="create-post-user-info">
+                <i class="fas fa-user"></i>
+                <span class="create-post-user-name">{{ user.name }}</span>
+            </div>
+            <br>
+            <form action="{% url 'create_post' %}" method="post">
+                {% csrf_token %}
+                <h3>Title</h3>
+                <input type="text" id="title" name="title" placeholder="Add title" class="create-post-tags-input" required> <br><br>
+                <textarea id="body" name="body" class="create-post-input" placeholder="What do you want to talk about?" required></textarea>
+                <div class="create-post-tags-info">
+                    <small>Help people find your blog easily by adding tags</small>
+                    <input type="text" id="tags" name="tags" placeholder="Add tags" class="create-post-tags-input">
+                    <br>
+                    <small>You can add up to 3 tags</small>
+                </div>
+                <button type="submit" class="create-post-button">Post</button>
+            </form>
+        </div>
+    </div>
+</div>

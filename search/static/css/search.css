@@ -1,0 +1,67 @@
+/* search section  */
+.search-card {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ccc; /* Optional: Border around the search card */
+    border-radius: 4px; /* Optional: Rounded corners */
+    padding: 5px; /* Optional: Padding inside the search card */
+}
+
+.search-icon {
+    margin-right: 5px; /* Space between the icon and input */
+}
+
+input[type="text"] {
+    border: none; /* Remove border from the input */
+    outline: none; /* Remove outline on focus */
+    flex: 1; /* Allow the input to take up available space */
+}
+
+.search-button {
+    padding: 6px 12px; /* Adjust padding for the button */
+    background-color: #007bff; /* Button background color */
+    color: white; /* Button text color */
+    border: none; /* Remove border */
+    border-radius: 20px; /* Set to a higher value for a rounded effect */
+    cursor: pointer; /* Change cursor to pointer */
+    margin-left: 5px; /* Space between the input and button */
+    transition: background-color 0.3s; /* Smooth transition for hover effect */
+}
+
+.search-button:hover {
+    background-color: #0056b3; /* Darker color on hover */
+}
+
+/*  suggestion cards */
+.suggestions-card {
+    background-color: white;
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.suggestions-card input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.suggestions-card button {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: #154c79;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.suggestions-card button i {
+    margin-right: 10px;
+}

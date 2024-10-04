@@ -65,4 +65,4 @@ def get_profile(request, user_id: int):
         'is_owner': request.user.is_authenticated and request.user.id == user_id,
         'posts': posts
     }
-    return render(request, 'profiles/profile.html', profile_data)
+    return render(request, 'user.html', profile_data)

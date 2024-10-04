@@ -1,0 +1,7 @@
+<form method="POST" action="{% url 'delete_edit_post' post.id %}" style="display:inline;">
+    {% csrf_token %}
+    <input type="hidden" name="delete" value="true">
+    <button class="delete-post" type="submit">
+        <i class="fas fa-minus"></i>
+    </button>
+</form>

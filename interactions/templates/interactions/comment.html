@@ -1,0 +1,60 @@
+<!-- Post Actions and Comments -->
+<div class="post-footer">
+    <div class="post-actions">
+
+        {% include 'interactions/like.html'%}
+        <button class="comment-btn"><i class="fas fa-comment"></i> Comment</button>
+
+    </div>
+
+    <!-- Comment Input Section -->
+    <form method="POST" action="{% url 'comment_post' post.id %}">
+        {% csrf_token %}
+        <div class="comments-section" style="display: none;">
+            <input name="body" type="text" class="comment-input" placeholder="Write a comment..." required>
+
+            <button type="submit" class="submit-comment">Submit</button>
+
+        </div>
+    </form>
+
+    <!-- Display Comments From Database -->
+    <div class="comments-display">
+        <h5>Comments:</h5>
+        <div class="comment-container">
+            {% for comment in post.comment_set.all %}
+            <div class="comment">
+                <div class="comment-actions">
+                    {% if comment.author == request.user %}
+                    <a href="{% url 'edit_comment' comment.id %}" class="edit-btn">
+                        <i class="fas fa-edit"></i>
+                    </a>
+                    <form method="POST" action="{% url 'delete_comment' comment.id %}" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="delete-btn">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </form>
+                    {% endif %}
+                </div>
+                <div class="comment-author">
+                    <i class="fas fa-user profile-icon"></i>
+                    <div class="author-details">
+                        <strong>{{ comment.author.name }}</strong>
+                        <div class="comment-date">
+                            <em>at {{ comment.created_at }}</em>
+                        </div>
+                    </div>
+                </div>
+                <div class="comment-body">
+                    <p>{{ comment.body }}</p>
+
+                </div>
+            </div>
+            {% empty %}
+            <div class="no-comments">No comments yet.</div>
+            {% endfor %}
+        </div>
+    </div>
+
+</div>
