@@ -2,12 +2,12 @@ from django.contrib.auth.hashers import make_password
 from django.contrib.auth import get_user_model
 from .messages import get_feedback_message
 from django.http import HttpResponse
-from profiles.repository import ProfileRepository
+from profiles.services import ProfileService
 
 User = get_user_model()
 
 
-class AccountRepository:
+class AccountService:
     @staticmethod
     def create_account(name: str, email: str, password: str) -> bool:
         """
@@ -27,7 +27,7 @@ class AccountRepository:
             password=make_password(password)
         )
         user.save()
-        ProfileRepository.create_default_profile(user)
+        ProfileService.create_default_profile(user)
         return True
 
     @staticmethod

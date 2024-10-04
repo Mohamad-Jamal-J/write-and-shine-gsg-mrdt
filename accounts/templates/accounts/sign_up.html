@@ -18,7 +18,6 @@
         <div class="container">
             <div class="form-container">
                 <h1>Write & Shine</h1>
-                {% include 'components/message.html'%}
                 <form method="post" action="{% url 'signup_api' %}">
                     {% csrf_token %}
                     <div class="input-group">
@@ -39,6 +38,7 @@
                         <label class="password-requirements">The password must consist of at least 8 characters and
                             contain letters, numbers, and symbols</label>
                     </div>
+                    {% include 'components/message.html'%}
                     <button type="submit">Sign Up</button>
                     <p class="sign-link">Already have an account? <a href="{% url 'login_api' %}">Sign in now</a></p>
                 </form>

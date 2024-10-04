@@ -7,7 +7,7 @@ from .messages import get_feedback_message
 User = get_user_model()
 
 
-class ProfileRepository:
+class ProfileService:
     @staticmethod
     def get_profile(user_id):
         """
@@ -36,7 +36,7 @@ class ProfileRepository:
         Returns:
             HttpResponse: A success message after profile creation or update.
         """
-        return ProfileRepository.create_or_update_profile(user)
+        return ProfileService.create_or_update_profile(user)
 
     @staticmethod
     def create_or_update_profile(user, headline='', bio='', education='', profile_picture=None):
