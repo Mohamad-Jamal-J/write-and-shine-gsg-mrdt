@@ -12,7 +12,7 @@ ERROR_MESSAGES = {
 
     # sign in/up related error messages
     'already_logged_in': 'Already logged in as {name}',
-    'account_not_found': 'No Account associated with the provided email was found.',
+    'account_not_found': 'No account associated with the provided email was found.',
     'wrong_password': 'Wrong password, please try again.',
     'not_logged': 'No user is currently logged in.',
 

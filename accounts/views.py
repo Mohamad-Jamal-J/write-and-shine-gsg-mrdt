@@ -3,7 +3,7 @@ from django.contrib.auth.hashers import check_password
 from django.contrib.auth import get_user_model
 from django.shortcuts import render, redirect
 from .messages import get_feedback_message
-from .repository import AccountRepository
+from .services import AccountService
 from django.http import HttpResponse
 from django.contrib import messages
 from django.urls import reverse
@@ -43,21 +43,23 @@ def signup_api(request) -> HttpResponse:
         name = received_data.get('name').strip()
         email = received_data.get('email').strip().lower()
         password = received_data.get('password')
+        data = {'name': name,
+                'email': email}
 
         # check for errors in the input.
         error_message = check_for_invalid_inputs(name, email, password)
         if error_message:
             messages.error(request, error_message)
-            return render(request, 'accounts/sign_up.html')
+            return render(request, 'accounts/sign_up.html', data)
 
         # check if the email is already used or not in our system.
-        if AccountRepository.does_user_exists(email):
+        if AccountService.does_user_exists(email):
             error_message = get_feedback_message('email_exist')
             messages.error(request, error_message)
-            return render(request, 'accounts/sign_up.html')
+            return render(request, 'accounts/sign_up.html', data)
 
         # create the account.
-        if AccountRepository.create_account(name, email, password):
+        if AccountService.create_account(name, email, password):
             success_message = get_feedback_message('account_created', False)
             messages.success(request, success_message)
             return redirect('login_api')
@@ -77,6 +79,7 @@ def login_api(request) -> HttpResponse:
     Returns:
         HttpResponse: Renders the login page, with success or error message.
     """
+    data = {}
     error_message = check_authenticated(request)
     if error_message:
         messages.error(request, error_message)
@@ -92,29 +95,31 @@ def login_api(request) -> HttpResponse:
         email = received_data.get('email').strip().lower()
         password = received_data.get('password')
 
+        data = {'email': email}
+
         # Validate email format
         error_message = validate_email(email, True)
         if error_message:
             messages.error(request, error_message)
-            return render(request, 'accounts/login.html')
+            return render(request, 'accounts/login.html', data)
 
         # Validate password presence
         error_message = validate_password(password, False)
         if error_message:
             messages.error(request, error_message)
-            return render(request, 'accounts/login.html')
+            return render(request, 'accounts/login.html', data)
 
         # Attempt to authenticate the user
         user = authenticate(request, email=email, password=password)
         if user is not None:
             login(request, user)
-            success_message = get_feedback_message('login_successful', False)
-            messages.success(request, success_message)
+            # success_message = get_feedback_message('login_successful', False)
+            # messages.success(request, success_message)
             return redirect(reverse('get_posts'))
 
         error_message = get_feedback_message('wrong_password')
         messages.error(request, error_message)
-    return render(request, 'accounts/login.html')
+    return render(request, 'accounts/login.html', data)
 
 
 def logout_api(request) -> HttpResponse:
@@ -130,17 +135,17 @@ def logout_api(request) -> HttpResponse:
     if not request.user.is_authenticated:
         error_message = get_feedback_message('not_logged')
         messages.error(request, error_message)
-        return render(request, 'accounts/login.html')
+        return redirect('login_api')
 
     error_message = validate_request_method(request, ['GET'])
     if error_message:
         messages.error(request, error_message)
-        return render(request, 'accounts/login.html')
+        return redirect('login_api')
 
     logout(request)
     success_message = get_feedback_message('logged_out', False)
     messages.success(request, success_message)
-    return render(request, 'accounts/login.html')
+    return redirect('login_api')
 
 
 def delete_account_api(request):
@@ -164,7 +169,7 @@ def delete_account_api(request):
         messages.error(request, error_message)
         return redirect(reverse('get_posts'))
 
-    success_message = AccountRepository.delete_account(user)
+    success_message = AccountService.delete_account(user)
     messages.error(request, success_message)
     return render(request, 'accounts/login.html')
 
@@ -209,7 +214,7 @@ def change_password_api(request):
         messages.error(request, error_message)
         return redirect(reverse('get_posts'))
 
-    success_message = AccountRepository.update_password(new_password, user)
+    success_message = AccountService.update_password(new_password, user)
     messages.success(request, success_message)
     return redirect(reverse('get_posts'))
 
@@ -290,7 +295,7 @@ def validate_email(email: str, login_checks: bool = False) -> str:
     if not re.match(email_pattern, email):
         return get_feedback_message('invalid_email_format')
 
-    if login_checks and not AccountRepository.does_user_exists(email):
+    if login_checks and not AccountService.does_user_exists(email):
         return get_feedback_message('account_not_found')
     return ''
 
