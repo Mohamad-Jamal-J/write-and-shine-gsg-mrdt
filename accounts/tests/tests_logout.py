@@ -1,7 +1,8 @@
+from django.contrib.messages import get_messages
 from django.test import TestCase, Client
 from django.urls import reverse
 from django.contrib.auth import get_user_model
-from ..messages import get_feedback_message
+from ..messages import message_handler
 
 
 class LogoutTests(TestCase):
@@ -20,21 +21,25 @@ class LogoutTests(TestCase):
         self.User.objects.create_user(**self.user_data)
         self.client.login(email=self.user_data['email'], password=self.user_data['password'])
         response = self.client.get(reverse('logout_api'))
-        messages = list(response.context['messages'])
 
-        expected_message = get_feedback_message('logged_out', is_error=False)
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('login_api'))
 
-        self.assertEqual(len(messages), 1)
+        expected_message = message_handler.get('logged_out', is_error=False)
+        messages = list(get_messages(response.wsgi_request))
+        self.assertGreater(len(messages), 0)
         self.assertEqual(str(messages[0]), expected_message)
 
     def test_logout_not_logged_in(self):
         """Test logout when not logged in."""
         response = self.client.get(reverse('logout_api'))
-        messages = list(response.context['messages'])
 
-        expected_message = get_feedback_message('not_logged')
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('login_api'))
 
-        self.assertEqual(len(messages), 1)
+        expected_message = message_handler.get('not_logged')
+        messages = list(get_messages(response.wsgi_request))
+        self.assertGreater(len(messages), 0)
         self.assertEqual(str(messages[0]), expected_message)
 
     def test_logout_wrong_request_method(self):
@@ -42,9 +47,8 @@ class LogoutTests(TestCase):
         self.User.objects.create_user(**self.user_data)
         self.client.login(email=self.user_data['email'], password=self.user_data['password'])
         response = self.client.delete(reverse('logout_api'))
-        messages = list(response.context['messages'])
 
-        expected_message = get_feedback_message('wrong_request', expected=['GET'], received='DELETE')
-
-        self.assertEqual(len(messages), 1)
+        expected_message = message_handler.get('wrong_request', expected=['GET'], received='DELETE')
+        messages = list(get_messages(response.wsgi_request))
+        self.assertGreater(len(messages), 0)
         self.assertEqual(str(messages[0]), expected_message)

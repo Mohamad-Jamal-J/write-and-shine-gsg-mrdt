@@ -1,9 +1,9 @@
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 from posts.views import get_user_posts_raw
-from .repository import ProfileRepository
+from .services import ProfileService
 from django.shortcuts import render, redirect
-from .messages import get_feedback_message
+from .messages import message_handler
 from django.contrib import messages
 
 
@@ -18,7 +18,7 @@ def create_or_update_profile(request):
     """
     user = request.user
     if request.method != 'POST':
-        error_message = get_feedback_message('invalid_request_method', expected='POST')
+        error_message = message_handler.get('invalid_request_method', expected='POST')
         messages.error(request, error_message)
         return redirect('get_profile', user.id)
 
@@ -27,7 +27,7 @@ def create_or_update_profile(request):
     education = request.POST.get('education', '')
     profile_picture = request.FILES.get('profile_picture')
 
-    response = ProfileRepository.create_or_update_profile(
+    response = ProfileService.create_or_update_profile(
         user=user,
         headline=headline,
         bio=bio,
@@ -48,10 +48,10 @@ def get_profile(request, user_id: int):
     user = user_posts_data.get('user', {})
     posts = user_posts_data.get('posts', [])
 
-    profile = ProfileRepository.get_profile(user_id)
+    profile = ProfileService.get_profile(user_id)
 
     if profile is None:
-        error_message = get_feedback_message('profile_not_found', id=user_id)
+        error_message = message_handler.get('profile_not_found', id=user_id)
         messages.error(request, error_message)
         return redirect(reverse('get_posts'))
 

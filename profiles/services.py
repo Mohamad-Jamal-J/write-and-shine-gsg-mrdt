@@ -3,11 +3,11 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from .models import Profile
-from .messages import get_feedback_message
+from .messages import message_handler
 User = get_user_model()
 
 
-class ProfileRepository:
+class ProfileService:
     @staticmethod
     def get_profile(user_id):
         """
@@ -36,7 +36,7 @@ class ProfileRepository:
         Returns:
             HttpResponse: A success message after profile creation or update.
         """
-        return ProfileRepository.create_or_update_profile(user)
+        return ProfileService.create_or_update_profile(user)
 
     @staticmethod
     def create_or_update_profile(user, headline='', bio='', education='', profile_picture=None):
@@ -67,9 +67,9 @@ class ProfileRepository:
         profile.save()
 
         if created:
-            success_message = get_feedback_message('profile_created', False)
+            success_message = message_handler.get('profile_created', False)
         else:
-            success_message = get_feedback_message('profile_updated', False)
+            success_message = message_handler.get('profile_updated', False)
 
         return HttpResponse(success_message, status=200)
 
@@ -86,5 +86,5 @@ class ProfileRepository:
         """
         profile = get_object_or_404(Profile, user=user)
         profile.delete()
-        success_message = get_feedback_message('profile_deleted', False)
+        success_message = message_handler.get('profile_deleted', False)
         return HttpResponse(success_message, status=200)

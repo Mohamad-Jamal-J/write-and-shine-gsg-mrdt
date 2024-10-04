@@ -3,7 +3,7 @@ from django.urls import reverse
 from django.contrib.auth import get_user_model
 from profiles.models import Profile
 from accounts.models import User
-from ..messages import get_feedback_message
+from ..messages import message_handler
 
 
 class SignupTests(TestCase):
@@ -38,7 +38,7 @@ class SignupTests(TestCase):
         response = self.client.post(reverse('signup_api'), self.user_data)
         messages = list(response.context['messages'])
 
-        expected_message = get_feedback_message('email_exist')
+        expected_message = message_handler.get('email_exist')
 
         self.assertEqual(len(messages), 1)
         self.assertEqual(str(messages[0]), expected_message)
@@ -53,7 +53,7 @@ class SignupTests(TestCase):
         response = self.client.post(reverse('signup_api'), self.user_data)
         messages = list(response.context['messages'])
 
-        expected_message = get_feedback_message('email_exist')
+        expected_message = message_handler.get('email_exist')
 
         self.assertEqual(len(messages), 1)
         self.assertEqual(str(messages[0]), expected_message)
@@ -65,7 +65,7 @@ class SignupTests(TestCase):
         response = self.client.post(reverse('signup_api'), invalid_user_data)
         messages = list(response.context['messages'])
 
-        expected_message = get_feedback_message('invalid_email_format')
+        expected_message = message_handler.get('invalid_email_format')
 
         self.assertEqual(len(messages), 1)
         self.assertEqual(str(messages[0]), expected_message)
@@ -77,7 +77,7 @@ class SignupTests(TestCase):
         response = self.client.post(reverse('signup_api'), invalid_user_data)
         messages = list(response.context['messages'])
 
-        expected_message = get_feedback_message('name_required')
+        expected_message = message_handler.get('name_required')
 
         self.assertEqual(len(messages), 1)
         self.assertEqual(str(messages[0]), expected_message)
@@ -89,7 +89,7 @@ class SignupTests(TestCase):
         response = self.client.post(reverse('signup_api'), invalid_user_data)
         messages = list(response.context['messages'])
 
-        expected_message = get_feedback_message('password_length')
+        expected_message = message_handler.get('password_length')
 
         self.assertEqual(len(messages), 1)
         self.assertEqual(str(messages[0]), expected_message)
@@ -99,7 +99,7 @@ class SignupTests(TestCase):
         response = self.client.delete(reverse('signup_api'))
         messages = list(response.context['messages'])
 
-        expected_message = get_feedback_message('wrong_request', expected=['POST', 'GET'], received='DELETE')
+        expected_message = message_handler.get('wrong_request', expected=['POST', 'GET'], received='DELETE')
 
         self.assertEqual(len(messages), 1)
         self.assertEqual(str(messages[0]), expected_message)
