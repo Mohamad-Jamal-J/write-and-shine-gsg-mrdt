@@ -2,7 +2,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth import get_user_model
 from django.shortcuts import render, redirect
-from .messages import get_feedback_message
+from .messages import message_handler
 from .services import AccountService
 from django.http import HttpResponse
 from django.contrib import messages
@@ -54,17 +54,17 @@ def signup_api(request) -> HttpResponse:
 
         # check if the email is already used or not in our system.
         if AccountService.does_user_exists(email):
-            error_message = get_feedback_message('email_exist')
+            error_message = message_handler.get('email_exist')
             messages.error(request, error_message)
             return render(request, 'accounts/sign_up.html', data)
 
         # create the account.
         if AccountService.create_account(name, email, password):
-            success_message = get_feedback_message('account_created', False)
+            success_message = message_handler.get('account_created', False)
             messages.success(request, success_message)
             return redirect('login_api')
 
-        error_message = get_feedback_message('')
+        error_message = message_handler.get('')
         messages.error(request, error_message)
     return render(request, 'accounts/sign_up.html')
 
@@ -113,11 +113,11 @@ def login_api(request) -> HttpResponse:
         user = authenticate(request, email=email, password=password)
         if user is not None:
             login(request, user)
-            # success_message = get_feedback_message('login_successful', False)
+            # success_message = message_handler.get('login_successful', False)
             # messages.success(request, success_message)
             return redirect(reverse('get_posts'))
 
-        error_message = get_feedback_message('wrong_password')
+        error_message = message_handler.get('wrong_password')
         messages.error(request, error_message)
     return render(request, 'accounts/login.html', data)
 
@@ -133,7 +133,7 @@ def logout_api(request) -> HttpResponse:
         HttpResponse: Renders the login page, with success or error message.
     """
     if not request.user.is_authenticated:
-        error_message = get_feedback_message('not_logged')
+        error_message = message_handler.get('not_logged')
         messages.error(request, error_message)
         return redirect('login_api')
 
@@ -143,7 +143,7 @@ def logout_api(request) -> HttpResponse:
         return redirect('login_api')
 
     logout(request)
-    success_message = get_feedback_message('logged_out', False)
+    success_message = message_handler.get('logged_out', False)
     messages.success(request, success_message)
     return redirect('login_api')
 
@@ -159,7 +159,7 @@ def delete_account_api(request):
         HttpResponse: Contains success or error message.
     """
     if not request.user.is_authenticated:
-        error_message = get_feedback_message('not_logged')
+        error_message = message_handler.get('not_logged')
         messages.error(request, error_message)
         return render(request, 'accounts/login.html')
 
@@ -185,7 +185,7 @@ def change_password_api(request):
         HttpResponse: Contains success or error message.
     """
     if not request.user.is_authenticated:
-        error_message = get_feedback_message('not_logged')
+        error_message = message_handler.get('not_logged')
         messages.error(request, error_message)
         return render(request, 'accounts/login.html')
 
@@ -200,7 +200,7 @@ def change_password_api(request):
     old_password = received_data.get('old_password')
     new_password = received_data.get('new_password')
     if not check_password(old_password, expected_old_password):
-        error_message = get_feedback_message('wrong_password')
+        error_message = message_handler.get('wrong_password')
         messages.error(request, error_message)
         return redirect(reverse('get_posts'))
 
@@ -210,7 +210,7 @@ def change_password_api(request):
         return redirect(reverse('get_posts'))
 
     if new_password == old_password:
-        error_message = get_feedback_message('same_password')
+        error_message = message_handler.get('same_password')
         messages.error(request, error_message)
         return redirect(reverse('get_posts'))
 
@@ -231,7 +231,7 @@ def check_authenticated(request):
              or None if the user is not authenticated.
     """
     if request.user.is_authenticated:
-        return get_feedback_message('already_logged_in', name=request.user.name)
+        return message_handler.get('already_logged_in', name=request.user.name)
     return None
 
 
@@ -247,7 +247,7 @@ def validate_request_method(request, expected_methods):
         str: A feedback message indicating a method mismatch, or None if the method matches the expected one.
     """
     if request.method not in expected_methods:
-        return get_feedback_message('wrong_request', expected=expected_methods, received=request.method)
+        return message_handler.get('wrong_request', expected=expected_methods, received=request.method)
     return None
 
 
@@ -264,7 +264,7 @@ def check_for_invalid_inputs(name: str, email: str, password: str) -> str:
         str: An error message if any input is invalid, or an empty string if all are valid.
     """
     if not name:
-        return get_feedback_message('name_required')
+        return message_handler.get('name_required')
 
     email_error = validate_email(email)
     if email_error:
@@ -289,14 +289,14 @@ def validate_email(email: str, login_checks: bool = False) -> str:
         str: An error message if the email is invalid, or an empty string if valid.
     """
     if not email:
-        return get_feedback_message('email_required')
+        return message_handler.get('email_required')
 
     email_pattern = r'^[a-z0-9_.+-]+@[a-z0-9-]+\.[a-z0-9-.]+$'
     if not re.match(email_pattern, email):
-        return get_feedback_message('invalid_email_format')
+        return message_handler.get('invalid_email_format')
 
     if login_checks and not AccountService.does_user_exists(email):
-        return get_feedback_message('account_not_found')
+        return message_handler.get('account_not_found')
     return ''
 
 
@@ -312,16 +312,16 @@ def validate_password(password: str, sign_up_checks: bool = True) -> str:
         str: An error message if the password is invalid, or an empty string if valid.
     """
     if not password:
-        return get_feedback_message('password_required')
+        return message_handler.get('password_required')
 
     if len(password) < 8:
-        return get_feedback_message('password_length')
+        return message_handler.get('password_length')
 
     if sign_up_checks:
         if not re.search(r'[A-Z]', password):
-            return get_feedback_message('password_uppercase')
+            return message_handler.get('password_uppercase')
 
         if not re.search(f"[{re.escape(punctuation)}]", password):
-            return get_feedback_message('password_special')
+            return message_handler.get('password_special')
 
     return ''

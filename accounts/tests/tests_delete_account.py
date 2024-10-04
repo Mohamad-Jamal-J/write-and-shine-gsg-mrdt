@@ -2,7 +2,7 @@ from django.test import TestCase, Client
 from django.urls import reverse
 from django.contrib.auth import get_user_model
 from profiles.models import Profile
-from ..messages import get_feedback_message
+from ..messages import message_handler
 
 
 class DeleteAccountTests(TestCase):
@@ -27,7 +27,7 @@ class DeleteAccountTests(TestCase):
         response = self.client.delete(self.delete_account_url)
         messages = list(response.context['messages'])
 
-        expected_message = get_feedback_message('delete_successful', is_error=False)
+        expected_message = message_handler.get('delete_successful', is_error=False)
 
         self.assertEqual(len(messages), 1)
         self.assertEqual(str(messages[0]), expected_message)
@@ -46,7 +46,7 @@ class DeleteAccountTests(TestCase):
         response = self.client.delete(self.delete_account_url)
         messages = list(response.context['messages'])
 
-        expected_message = get_feedback_message('not_logged')
+        expected_message = message_handler.get('not_logged')
 
         self.assertEqual(len(messages), 1)
         self.assertEqual(str(messages[0]), expected_message)

@@ -1,7 +1,7 @@
 from django.test import TestCase, Client
 from django.urls import reverse
 from django.contrib.auth import get_user_model
-from ..messages import get_feedback_message
+from ..messages import message_handler
 
 
 class LoginTests(TestCase):
@@ -34,7 +34,7 @@ class LoginTests(TestCase):
         })
         messages = list(response.context['messages'])
 
-        expected_message = get_feedback_message('wrong_password')
+        expected_message = message_handler.get('wrong_password')
 
         self.assertEqual(len(messages), 1)
         self.assertEqual(str(messages[0]), expected_message)
@@ -48,7 +48,7 @@ class LoginTests(TestCase):
         })
         messages = list(response.context['messages'])
 
-        expected_message = get_feedback_message('password_required')
+        expected_message = message_handler.get('password_required')
 
         self.assertEqual(len(messages), 1)
         self.assertEqual(str(messages[0]), expected_message)
@@ -61,7 +61,7 @@ class LoginTests(TestCase):
         })
         messages = list(response.context['messages'])
 
-        expected_message = get_feedback_message('invalid_email_format')
+        expected_message = message_handler.get('invalid_email_format')
 
         self.assertEqual(len(messages), 1)
         self.assertEqual(str(messages[0]), expected_message)
@@ -82,7 +82,7 @@ class LoginTests(TestCase):
         response = self.client.delete(reverse('login_api'))
         messages = list(response.context['messages'])
 
-        expected_message = get_feedback_message('wrong_request', expected=['POST', 'GET'], received='DELETE')
+        expected_message = message_handler.get('wrong_request', expected=['POST', 'GET'], received='DELETE')
 
         self.assertEqual(len(messages), 1)
         self.assertEqual(str(messages[0]), expected_message)
