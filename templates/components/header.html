@@ -8,7 +8,7 @@
         <div class="dropdown">
             <a href="#"><i class="fas fa-user-circle user-icon"></i></a>
             <div class="dropdown-content">
-                <a href="{% url 'get_user_posts' user.id %}">Profile</a>
+                <a href="{% url 'get_profile' user.id %}">Profile</a>
                 <a href="{% url 'logout_api' %}">Logout</a>
             </div>
         </div>

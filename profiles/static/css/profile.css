@@ -124,20 +124,25 @@ main {
 }
 
 .profile-large {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    background-color: #eee;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 0 auto 20px;
+    width: 100px;                /* Fixed width */
+    height: 100px;               /* Fixed height */
+    border-radius: 50%;          /* Circular shape */
+    background-color: #eee;      /* Background color */
+    display: flex;               /* Flexbox for centering */
+    justify-content: center;      /* Center the image horizontally */
+    align-items: center;          /* Center the image vertically */
+    margin: 0 auto 20px;         /* Centered margin */
+    overflow: hidden;             /* Hide overflow */
 }
 
-.profile-large i {
-    font-size: 3rem;
-    color: #666;
+.profile-large img {
+    width: 100%;                  /* Full width of the container */
+    height: 100%;                 /* Full height of the container */
+    object-fit: cover;            /* Scale the image to cover the container */
+    border-radius: 50%;           /* Match the shape of the container */
 }
+
+
 
 .user-info h2 {
     margin-bottom: 10px;

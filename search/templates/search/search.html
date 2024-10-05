@@ -1,9 +1,10 @@
 <div class="search-card">
-    <i class="fas fa-search search-icon"></i>
-    <input type="text" placeholder="Search with post title" aria-label="Search Blog">
-    <!--<button type="button" class="search-button">Search</button>-->
+    <form method="GET" action="{% url 'search_post' %}">
+        <i class="fas fa-search search-icon"></i>
+        <input type="text" name="post_name" placeholder="Search with post title" aria-label="Search Blog">
+        <button type="submit" class="search-button">Search</button>
+    </form>
 </div>
-
 
 <div class="suggestions-card">
     <input type="text" id="search-bar" placeholder="Search...">

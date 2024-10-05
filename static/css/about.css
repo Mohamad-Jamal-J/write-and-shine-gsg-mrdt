@@ -47,7 +47,7 @@ p {
 
 .join-us {
     background-color: #154c79;
-    /* Green */
+    text-decoration: none;
     color: white;
     padding: 10px 20px;
     text-align: center;
@@ -58,9 +58,9 @@ p {
     align-self: flex-start;
     /* Moves button to the right */
     margin-left: 10px;
+    display: inline-block; 
 }
 
 .join-us:hover {
     background-color: #236398;
-    /* Darker green on hover */
 }

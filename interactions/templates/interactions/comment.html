@@ -26,9 +26,11 @@
             <div class="comment">
                 <div class="comment-actions">
                     {% if comment.author == request.user %}
-                    <a href="{% url 'edit_comment' comment.id %}" class="edit-btn">
-                        <i class="fas fa-edit"></i>
+                    <!--<a href="{% url 'edit_comment' comment.id %}" class="edit-btn">
+                      <i class="fas fa-edit"></i>
                     </a>
+                    -->
+
                     <form method="POST" action="{% url 'delete_comment' comment.id %}" style="display:inline;">
                         {% csrf_token %}
                         <button type="submit" class="delete-btn">
@@ -38,7 +40,9 @@
                     {% endif %}
                 </div>
                 <div class="comment-author">
-                    <i class="fas fa-user profile-icon"></i>
+                    <div class="comment-profile">
+                        <img src="{{comment.author.profile.profile_picture.url }}" alt="profile pic">
+                    </div>
                     <div class="author-details">
                         <strong>{{ comment.author.name }}</strong>
                         <div class="comment-date">
