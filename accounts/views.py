@@ -113,8 +113,8 @@ def login_api(request) -> HttpResponse:
         user = authenticate(request, email=email, password=password)
         if user is not None:
             login(request, user)
-            # success_message = message_handler.get('login_successful', False)
-            # messages.success(request, success_message)
+            success_message = message_handler.get('login_successful', False)
+            messages.success(request, success_message)
             return redirect(reverse('get_posts'))
 
         error_message = message_handler.get('wrong_password')
@@ -161,17 +161,17 @@ def delete_account_api(request):
     if not request.user.is_authenticated:
         error_message = message_handler.get('not_logged')
         messages.error(request, error_message)
-        return render(request, 'accounts/login.html')
+        return redirect('login_api')
 
     user = request.user
     error_message = validate_request_method(request, ['DELETE'])
     if error_message:
         messages.error(request, error_message)
-        return redirect(reverse('get_posts'))
+        return redirect(reverse('get_profile', kwargs={'user_id': user.id}))
 
     success_message = AccountService.delete_account(user)
-    messages.error(request, success_message)
-    return render(request, 'accounts/login.html')
+    messages.success(request, success_message)
+    return redirect('login_api')
 
 
 def change_password_api(request):
@@ -187,14 +187,14 @@ def change_password_api(request):
     if not request.user.is_authenticated:
         error_message = message_handler.get('not_logged')
         messages.error(request, error_message)
-        return render(request, 'accounts/login.html')
+        return redirect('login_api')
 
     user = request.user
     expected_old_password = user.password
     error_message = validate_request_method(request, ['POST'])
     if error_message:
         messages.error(request, error_message)
-        return redirect(reverse('get_posts'))
+        return redirect(reverse('get_profile', kwargs={'user_id': user.id}))
 
     received_data = request.POST
     old_password = received_data.get('old_password')
@@ -202,21 +202,21 @@ def change_password_api(request):
     if not check_password(old_password, expected_old_password):
         error_message = message_handler.get('wrong_password')
         messages.error(request, error_message)
-        return redirect(reverse('get_posts'))
+        return redirect(reverse('get_profile', kwargs={'user_id': user.id}))
 
     error_message = validate_password(new_password)
     if error_message:
         messages.error(request, error_message)
-        return redirect(reverse('get_posts'))
+        return redirect(reverse('get_profile', kwargs={'user_id': user.id}))
 
     if new_password == old_password:
         error_message = message_handler.get('same_password')
         messages.error(request, error_message)
-        return redirect(reverse('get_posts'))
+        return redirect(reverse('get_profile', kwargs={'user_id': user.id}))
 
     success_message = AccountService.update_password(new_password, user)
     messages.success(request, success_message)
-    return redirect(reverse('get_posts'))
+    return redirect(reverse('get_profile', kwargs={'user_id': user.id}))
 
 
 def check_authenticated(request):
