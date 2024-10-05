@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Agbalumo&display=swap');
+
 header {
     background-color: #154c79;
     color: white;
@@ -7,11 +9,13 @@ header {
     align-items: center;
     font-weight: bold;
     padding-right: 25px;
+
 }
 
 header .logo {
-    font-family: 'Trirong';
+   
     font-size: large;
+    font-family: "Agbalumo", system-ui;
 }
 
 header nav {

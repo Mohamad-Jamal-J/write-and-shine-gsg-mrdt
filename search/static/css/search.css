@@ -1,11 +1,20 @@
 /* search section  */
 .search-card {
+    position: fixed; 
+    top: 150px; 
+    right: 20px; 
+    width: 400px; 
+    z-index: 1000; 
     display: flex;
     align-items: center;
-    border: 1px solid #ccc; /* Optional: Border around the search card */
-    border-radius: 4px; /* Optional: Rounded corners */
-    padding: 5px; /* Optional: Padding inside the search card */
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 5px;
+    background-color: white; 
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
 }
+
+
 
 .search-icon {
     margin-right: 5px; /* Space between the icon and input */
@@ -24,7 +33,7 @@ input[type="text"] {
     border: none; /* Remove border */
     border-radius: 20px; /* Set to a higher value for a rounded effect */
     cursor: pointer; /* Change cursor to pointer */
-    margin-left: 5px; /* Space between the input and button */
+    margin-left: 110px; /* Space between the input and button */
     transition: background-color 0.3s; /* Smooth transition for hover effect */
 }
 
@@ -33,12 +42,22 @@ input[type="text"] {
 }
 
 /*  suggestion cards */
+
 .suggestions-card {
-    background-color: white;
+    position: fixed; 
+    top: 200px; 
+    right: 20px; 
+    width: 400px; 
+    z-index: 999; 
+    background-color: white; 
     border-radius: 10px;
     padding: 15px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    
 }
+
+
+
 
 .suggestions-card input {
     width: 100%;

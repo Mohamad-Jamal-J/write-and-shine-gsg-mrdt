@@ -45,7 +45,7 @@
             {% if user.is_authenticated %}
             <p>Welcome, {{ user.username }}!</p>
             {% else %}
-            <button class="join-us" onclick="redirectToSignUp()">Join Us</button>
+            <a href="{% url 'get_posts' %}" class="join-us">Learn More !</a>
             {% endif %}
 
 
@@ -54,6 +54,7 @@
             <img src="{% static 'img/about.jpg' %}" alt="About Us Image">
         </div>
     </div>
+    {% include 'posts/create_post.html' %}
     <script src="{% static 'js/header.js' %}">
     </script>
     <script src="{% static 'js/create_post.js' %}" defer>

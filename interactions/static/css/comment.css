@@ -1,159 +1,171 @@
 .post-footer {
-    margin-top: 15px;
+  margin-top: 15px;
 }
 
 .post-actions {
-    display: flex;
-    justify-content: space-around;
-    padding: 10px 0;
-    gap: 5px;
-    border-top: 1px solid #eee;
-    border-bottom: 1px solid #eee;
+  display: flex;
+  justify-content: space-around;
+  padding: 10px 0;
+  gap: 5px;
+  border-top: 1px solid #eee;
+  border-bottom: 1px solid #eee;
 }
 
 .post-actions button {
-    background: none;
-    border: none;
-    color: #555;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
+  background: none;
+  border: none;
+  color: #555;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
 }
 
 .post-actions button i {
-    margin-right: 5px;
+  margin-right: 5px;
 }
 
 .post-actions button:hover {
-    color: #3498db;
+  color: #3498db;
 }
 
 .comments-section {
-    display: flex;
-    margin-top: 10px;
+  display: flex;
+  margin-top: 10px;
 }
 
 .comment-input {
-    flex: 1;
-    padding: 8px;
-    border-radius: 20px;
-    border: 1px solid #ddd;
+  flex: 1;
+  padding: 8px;
+  border-radius: 20px;
+  border: 1px solid #ddd;
 }
 
 .submit-comment {
-    background-color: #3498db;
-    color: white;
-    border: none;
-    border-radius: 20px;
-    padding: 8px 15px;
-    margin-left: 10px;
-    cursor: pointer;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  padding: 8px 15px;
+  margin-left: 10px;
+  cursor: pointer;
 }
 
 .submit-comment:hover {
-    background-color: #2980b9;
+  background-color: #2980b9;
 }
 
 .comments-display {
-    margin-top: 15px;
-    border-top: 1px solid #e9ecef;
-    padding-top: 10px;
+  margin-top: 15px;
+  border-top: 1px solid #e9ecef;
+  padding-top: 10px;
 }
 
 .comments-display h4 {
-    font-size: 1.25em;
-    margin-bottom: 10px;
+  font-size: 1.25em;
+  margin-bottom: 10px;
 }
 
 .comment-container {
-    display: flex;
-    flex-direction: column;
-    gap: 10px; /* Space between comments */
+  display: flex;
+  flex-direction: column;
+  gap: 10px; /* Space between comments */
 }
 
 .comment {
-    padding: 10px;
-    border-bottom: 1px solid #e9ecef; /* Bottom border for each comment */
-    display: flex;
-    flex-direction: column; /* Stack author and body vertically */
-    position: relative; /* Set positioning context for actions */
+  padding: 10px;
+  border-bottom: 1px solid #e9ecef; /* Bottom border for each comment */
+  display: flex;
+  flex-direction: column; /* Stack author and body vertically */
+  position: relative; /* Set positioning context for actions */
 }
 
 .comment-actions {
-    position: absolute; /* Positioning for top-right */
-    top: 10px; /* Distance from the top */
-    right: 10px; /* Distance from the right */
-    font-size: 0.9em; /* Adjust font size */
+  position: absolute; /* Positioning for top-right */
+  top: 10px; /* Distance from the top */
+  right: 10px; /* Distance from the right */
+  font-size: 0.9em; /* Adjust font size */
 }
 
 .comment-author {
-    display: flex;
-    align-items: center; /* Align the icon and name in one row */
+  display: flex;
+  align-items: center; /* Align the icon and name in one row */
 }
 
-
-
 .author-details {
-    display: flex;
-    flex-direction: column; /* Stack name and date vertically */
+  display: flex;
+  flex-direction: column; /* Stack name and date vertically */
 }
 
 .comment-date {
-    font-size: 0.85em; /* Make the date slightly smaller */
-    color: gray; /* Optional: Make the date a lighter color */
-    margin-top: 2px; /* Space between the name and date */
+  font-size: 0.85em; /* Make the date slightly smaller */
+  color: gray; /* Optional: Make the date a lighter color */
+  margin-top: 2px; /* Space between the name and date */
 }
-
 
 .profile-icon {
-    font-size: 30px; /* Adjust size as needed */
-    color: #365899; /* Set the icon color (like Facebook blue) */
-    margin-right: 10px; /* Space between icon and name */
+  font-size: 30px; /* Adjust size as needed */
+  color: #365899; /* Set the icon color (like Facebook blue) */
+  margin-right: 10px; /* Space between icon and name */
 }
 
-
 .comment-body {
-    margin: 5px 0;
-    margin-left: 30px; /* Adjust this value to move the comment body more to the right */
-    background-color: #f0f2f5;
-    border-radius: 8px;
-    padding: 10px;
+  margin: 5px 0;
+  margin-left: 30px; /* Adjust this value to move the comment body more to the right */
+  background-color: #f0f2f5;
+  border-radius: 8px;
+  padding: 10px;
 }
 
 .comment-body p {
-    margin: 0;
-   
-    line-height: 1.4;
+  margin: 0;
+
+  line-height: 1.4;
 }
 
-
 .comment-actions {
-    display: flex; /* Use flexbox for horizontal alignment */
-    position: absolute; /* Positioning for top-right */
-    top: 10px; /* Distance from the top */
-    right: 10px; /* Distance from the right */
-    font-size: 0.8em; /* Smaller font size for buttons */
-    gap: 5px; /* Space between Edit and Delete buttons */
+  display: flex; /* Use flexbox for horizontal alignment */
+  position: absolute; /* Positioning for top-right */
+  top: 10px; /* Distance from the top */
+  right: 10px; /* Distance from the right */
+  font-size: 0.8em; /* Smaller font size for buttons */
+  gap: 5px; /* Space between Edit and Delete buttons */
 }
 
 .comment-actions a,
 .comment-actions button {
-    background: none; /* No background for the button */
-    border: none; /* No border for the button */
-    color: #007bff; /* Link color */
-    cursor: pointer; /* Pointer cursor */
-    display: flex; /* Flexbox for icon alignment */
-    align-items: center; /* Center items vertically */
+  background: none; /* No background for the button */
+  border: none; /* No border for the button */
+  color: #007bff; /* Link color */
+  cursor: pointer; /* Pointer cursor */
+  display: flex; /* Flexbox for icon alignment */
+  align-items: center; /* Center items vertically */
 }
 
 .comment-actions a i,
 .comment-actions button i {
-    margin-right: 5px; /* Space between icon and text */
-    font-size: 1em; /* Icon size */
+  margin-right: 5px; /* Space between icon and text */
+  font-size: 1em; /* Icon size */
 }
 
 .comment-actions button:hover,
 .comment-actions a:hover {
-    color: #3498db; /* Change color on hover */
+  color: #3498db; /* Change color on hover */
+}
+.comment-profile {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: #eee;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 10px;
+  overflow: hidden;
 }
 
+.comment-profile img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}

@@ -13,4 +13,4 @@ def search_post(request):
     # Call repository method to get the filtered posts
     posts = SearchRepository.search_by_post_or_tag(query_post_name)
     
-    return render(request, 'posts.html', {'posts': posts})
+    return render(request, 'Home.html', {'posts': posts})
