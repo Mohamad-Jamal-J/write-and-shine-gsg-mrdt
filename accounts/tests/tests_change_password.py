@@ -3,6 +3,7 @@ from django.urls import reverse
 from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import check_password
 from ..messages import message_handler
+from test_helpers import assert_message, assert_redirect
 
 
 class ChangePasswordTests(TestCase):
@@ -11,15 +12,12 @@ class ChangePasswordTests(TestCase):
         self.client = Client()
         self.User = get_user_model()
         self.user_data = {
+            'id': 1234567845,
             'name': 'Test User',
             'email': 'testuser@ws.com',
             'password': 'passwordTest!'
         }
-        self.user = self.User.objects.create_user(
-            name=self.user_data['name'],
-            email=self.user_data['email'],
-            password=self.user_data['password']
-        )
+        self.user = self.User.objects.create_user(**self.user_data)
         self.change_password_url = reverse('change_password_api')
 
     def test_change_password_success(self):
@@ -32,12 +30,12 @@ class ChangePasswordTests(TestCase):
             'new_password': new_password
         })
 
-        self.assertEqual(response.status_code, 302)
-        self.assertRedirects(response, reverse('get_posts'))
-
         # Verify the password was updated
         self.user.refresh_from_db()
         self.assertTrue(check_password(new_password, self.user.password))
+
+        expected_message = message_handler.get('password_changed', False)
+        assert_message(response, expected_message)
 
     def test_change_password_same_as_old(self):
         """Test trying to change the password to the same old one."""
@@ -47,8 +45,8 @@ class ChangePasswordTests(TestCase):
             'new_password': self.user_data['password']
         })
 
-        self.assertEqual(response.status_code, 302)
-        self.assertRedirects(response, reverse('get_posts'))
+        expected_message = message_handler.get('same_password')
+        assert_message(response, expected_message)
 
     def test_change_password_invalid_new_password(self):
         """Test trying to change the password with an invalid new password."""
@@ -60,8 +58,8 @@ class ChangePasswordTests(TestCase):
             'new_password': invalid_password
         })
 
-        self.assertEqual(response.status_code, 302)
-        self.assertRedirects(response, reverse('get_posts'))
+        expected_message = message_handler.get('password_length')
+        assert_message(response, expected_message)
 
     def test_change_password_incorrect_old_password(self):
         """Test trying to change the password with the wrong old password."""
@@ -70,8 +68,9 @@ class ChangePasswordTests(TestCase):
             'old_password': 'WrongPassword123!',
             'new_password': 'NewPassword123!'
         })
-        self.assertEqual(response.status_code, 302)
-        self.assertRedirects(response, reverse('get_posts'))
+
+        expected_message = message_handler.get('wrong_password')
+        assert_message(response, expected_message)
 
     def test_change_password_not_logged_in(self):
         """Test trying to change the password when not logged in."""
@@ -79,17 +78,15 @@ class ChangePasswordTests(TestCase):
             'old_password': self.user_data['password'],
             'new_password': 'NewPassword123!'
         })
-        messages = list(response.context['messages'])
+        assert_redirect(response, 'login_api')
 
         expected_message = message_handler.get('not_logged')
-
-        self.assertEqual(len(messages), 1)
-        self.assertEqual(str(messages[0]), expected_message)
+        assert_message(response, expected_message)
 
     def test_change_password_wrong_request_method(self):
         """Test trying to change the password with a non-POST request method."""
         self.client.login(email=self.user_data['email'], password=self.user_data['password'])
         response = self.client.get(self.change_password_url)
 
-        self.assertEqual(response.status_code, 302)
-        self.assertRedirects(response, reverse('get_posts'))
+        expected_message = message_handler.get('wrong_request', expected=['POST'], received='GET')
+        assert_message(response, expected_message)
