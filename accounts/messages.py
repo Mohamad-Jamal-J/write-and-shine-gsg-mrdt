@@ -1,4 +1,4 @@
-from handlers import MessageHandler
+from handlers import MessageHandlerFactory
 
 SUCCESS_MESSAGES = {
     'account_created': 'Account created successfully.',
@@ -35,4 +35,4 @@ ERROR_MESSAGES = {
     'same_password': 'The new password should be different than the old password.'
 }
 
-message_handler = MessageHandler(SUCCESS_MESSAGES, ERROR_MESSAGES)
+message_handler = MessageHandlerFactory.get_handler('accounts')

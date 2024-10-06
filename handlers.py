@@ -1,3 +1,54 @@
+from abc import ABC
+
+
+class MessageHandlerFactory(ABC):
+
+    @staticmethod
+    def get_handler(app_name: str) -> 'MessageHandler':
+        """
+        Get a MessageHandler instance for the specified app.
+
+        Args:
+            app_name (str): The name of the app (e.g., 'accounts', 'profiles').
+
+        Returns:
+            MessageHandler: An instance of MessageHandler initialized with app-specific messages.
+
+        Raises:
+            ValueError: If the app name is unknown or messages cannot be loaded.
+        """
+        success_messages, error_messages = MessageHandlerFactory.load_messages(app_name)
+        return MessageHandler(success_messages, error_messages)
+
+    @staticmethod
+    def load_messages(app_name: str) -> tuple:
+        """
+        Load the success and error messages for the specified app.
+
+        Args:
+            app_name (str): The name of the app whose messages are to be loaded.
+
+        Returns:
+            tuple: A tuple containing success messages and error messages.
+
+        Raises:
+            ValueError: If the app name is unknown or messages cannot be found.
+        """
+        if app_name == 'accounts':
+            from accounts.messages import SUCCESS_MESSAGES, ERROR_MESSAGES
+        elif app_name == 'profiles':
+            from profiles.messages import SUCCESS_MESSAGES, ERROR_MESSAGES
+        # elif app_name == 'posts':
+        #     from posts.messages import SUCCESS_MESSAGES, ERROR_MESSAGES
+        # elif app_name == 'interactions':
+        #     from interactions.messages import SUCCESS_MESSAGES, ERROR_MESSAGES
+        # elif app_name == 'search':
+        #     from interactions.messages import SUCCESS_MESSAGES, ERROR_MESSAGES
+        else:
+            raise ValueError(f"Unknown app: {app_name}")
+        return SUCCESS_MESSAGES, ERROR_MESSAGES
+
+
 class MessageHandler:
     def __init__(self, success_messages: dict, error_messages: dict):
         """
