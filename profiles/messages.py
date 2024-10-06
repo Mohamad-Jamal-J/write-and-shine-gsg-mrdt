@@ -1,4 +1,4 @@
-from handlers import MessageHandler
+from handlers import MessageHandlerFactory
 
 SUCCESS_MESSAGES = {
     'profile_created': 'Profile created successfully.',
@@ -14,4 +14,4 @@ ERROR_MESSAGES = {
 }
 
 
-message_handler = MessageHandler(SUCCESS_MESSAGES, ERROR_MESSAGES)
+message_handler = MessageHandlerFactory.get_handler('profiles')
