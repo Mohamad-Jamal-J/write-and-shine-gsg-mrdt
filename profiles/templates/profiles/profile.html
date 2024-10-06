@@ -1,6 +1,6 @@
 <main>
     <section class="posts-section">
-        <h1>{{user.name}}</h1>
+        <h1>{{name}}</h1>
         <div class="sort-by">
             <button id="sort-btn">Sort by <i class="fas fa-sort"></i></button>
         </div>
@@ -14,17 +14,19 @@
     <aside class="sidebar">
         <div class="user-info-container">
 
-            <button class="edit-icon" aria-label="Edit Profile">
-                <i class="fas fa-ellipsis-h"></i>
-            </button>
+            {% if is_owner %}
+                <button class="edit-icon" aria-label="Edit Profile">
+                    <i class="fas fa-ellipsis-h"></i>
+                </button>
+            {% endif %}
 
             <div class="user-info">
                 <div class="profile-large">
-                    <img src="{{ user.profile.profile_picture.url }}" alt="profile pic">
+                    <img src="{{ profile_picture }}" alt="profile pic">
                 </div>
-                <h2>{{ user.name }}</h2>
+                <h2>{{ name }}</h2>
                 <p>{{ headline }}</p>
-                <p><strong>Blogs Published:</strong>{{user.id}}</p>
+                <p><strong>Blogs Published:</strong>{{posts|length}}</p>
                 <p><strong>Education:</strong> {{ education }}</p>
                 <p><strong>Biography:</strong> {{ bio }}</p>
             </div>

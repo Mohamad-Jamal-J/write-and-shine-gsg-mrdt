@@ -1,13 +1,13 @@
 <div class="search-card">
     <form method="GET" action="{% url 'search_post' %}">
         <i class="fas fa-search search-icon"></i>
-        <input type="text" name="post_name" placeholder="Search with post title" aria-label="Search Blog">
+        <input type="text" name="post_name" placeholder="Search for posts" aria-label="Search Blog">
         <button type="submit" class="search-button">Search</button>
     </form>
 </div>
 
 <div class="suggestions-card">
-    <input type="text" id="search-bar" placeholder="Search...">
+    <input type="text" id="search-bar" placeholder="Filter the results on this page..">
     <button disabled><i class="fas fa-lightbulb"></i> Data Science </button>
     <button disabled><i class="fas fa-lightbulb"></i> Innovation</button>
     <button disabled><i class="fas fa-lightbulb"></i> AI </button>

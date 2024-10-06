@@ -13,10 +13,6 @@ import re
 User = get_user_model()
 
 
-def index(request):
-    return render(request, 'accounts/index.html')
-
-
 def signup_api(request) -> HttpResponse:
     """
     Handles user signup as an API endpoint.

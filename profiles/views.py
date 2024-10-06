@@ -7,10 +7,6 @@ from .messages import message_handler
 from django.contrib import messages
 
 
-def index(request):
-    return render(request, 'profiles/profile.html')
-
-
 @login_required
 def create_or_update_profile(request):
     """

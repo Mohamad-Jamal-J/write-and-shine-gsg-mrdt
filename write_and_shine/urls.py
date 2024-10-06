@@ -16,17 +16,17 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, RedirectView
 from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', TemplateView.as_view(template_name='index.html'), name='home'),
+    path('', RedirectView.as_view(url='posts/', permanent=False), name='home'),
     path('about/', TemplateView.as_view(template_name='about.html'), name='about'),
     path('accounts/', include('accounts.urls')),
     path('', include('profiles.urls')),
-    path('posts/', include('posts.urls') ),
+    path('posts/', include('posts.urls')),
     path('', include('search.urls')),
     path('', include('interactions.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from rest_framework.decorators import api_view
@@ -22,7 +23,8 @@ def like_post(request, post_id):
             return redirect('get_posts')
         return HttpResponse(result['message'], status=403)
 
-    return HttpResponse("You should be logged in to like/unlike a post", status=403)
+    messages.error(request, "You should be logged in to like/unlike a post" )
+    return redirect('login_api')
 
 
 @api_view(['POST'])
@@ -44,7 +46,8 @@ def comment_post(request, post_id):
             return redirect('get_posts')
         return HttpResponse(result['message'], status=400)
 
-    return HttpResponse("You should be logged in to comment on a post", status=403)
+    messages.error(request, "You should be logged in to comment on a post")
+    return redirect('login_api')
 
 
 @api_view(['GET', 'POST'])

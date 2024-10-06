@@ -1,7 +1,9 @@
 <header>
     <div class="logo"> Write & Shine</div>
     <nav>
-        <a href="#" id="postModalBtn" >Write</a>
+        {% if user.is_authenticated %}
+            <a href="#" id="postModalBtn" >Write</a>
+        {% endif %}
         <a href="{% url 'get_posts' %}">Home</a>
         <a href="{% url 'about' %}">About</a>
         {% if user.is_authenticated %}

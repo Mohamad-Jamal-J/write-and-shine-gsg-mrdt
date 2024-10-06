@@ -22,7 +22,9 @@
 <body>
     {% include 'components/header.html' %}
     {% include 'profiles/profile.html' %}
-    {% include 'profiles/edit_profile.html' %}
+    {% if is_owner %}
+        {% include 'profiles/edit_profile.html' %}
+    {% endif %}
     {% include 'posts/create_post.html' %}
     </main>
 

@@ -55,14 +55,10 @@ class ProfileService:
         """
         profile, created = Profile.objects.get_or_create(user=user)
 
-        if headline:
-            profile.headline = headline
-        if bio:
-            profile.bio = bio
-        if education:
-            profile.education = education
-        if profile_picture:
-            profile.profile_picture = profile_picture
+        profile.headline = headline
+        profile.bio = bio
+        profile.education = education
+        profile.profile_picture = profile_picture
 
         profile.save()
 

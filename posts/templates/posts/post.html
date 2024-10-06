@@ -8,7 +8,9 @@
         </div>
         <div class="card-content">
             <div class="user-details">
-                <h2>{{ post.author.name }}</h2>
+                <a href="{% url 'get_profile' post.author.id %}">
+                    <h2>{{ post.author.name }}</h2>
+                </a>
                 <span class="post-time">{{ post.created_at }}</span>
             </div>
             <p class="short-content"><strong>{{ post.title }}</strong></p>

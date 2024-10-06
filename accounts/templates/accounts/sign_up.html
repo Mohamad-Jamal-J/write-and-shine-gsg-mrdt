@@ -29,16 +29,16 @@
                         <label>Email</label>
                         <i class="fas fa-envelope icon2"></i>
                         <input type="email" id="email" name="email" value="{{ email }}"
-                            placeholder="  mbqasem@exampel.com" required>
+                            placeholder="  mbqasem@example.com" required>
                     </div>
                     <div class="input-group">
                         <label>Password</label>
                         <i class="fas fa-lock icon" style="margin-bottom:50px;"></i>
                         <input type="password" id="password" name="password" placeholder="  ********" required>
-                        <label class="password-requirements">The password must consist of at least 8 characters and
-                            contain letters, numbers, and symbols</label>
+                        <label class="password-requirements">The password must contain least 8 characters,
+                            including one uppercase letter and one special character (e.g. !-@#_$)</label>
                     </div>
-                    {% include 'components/message.html'%}
+                    {% include 'components/message.html' %}
                     <button type="submit">Sign Up</button>
                     <p class="sign-link">Already have an account? <a href="{% url 'login_api' %}">Sign in now</a></p>
                 </form>

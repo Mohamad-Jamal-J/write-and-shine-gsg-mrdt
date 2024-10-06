@@ -6,11 +6,11 @@
             {% csrf_token %}
            
             <label for="headline">Headline</label>
-            <input type="text" id="headline" name="headline" value="{{ headline }}">
+            <input type="text" id="headline" name="headline" value="{{ headline|default_if_none:'' }}">
             <label for="education">Education</label>
-            <input type="text" id="education" name="education" value="{{ education }}">
+            <input type="text" id="education" name="education" value="{{ education|default_if_none:'' }}">
             <label for="bio">Bio:</label>
-            <textarea id="bio" name="bio">{{bio}}</textarea>
+            <textarea id="bio" name="bio">{{ bio|default_if_none:'' }}</textarea>
             <label for="profile_picture">Profile Picture:</label><br>
             <input type="file" id="profile_picture" name="profile_picture"><br><br>
             <button type="submit" value="Save Changes" >Save Changes</button>

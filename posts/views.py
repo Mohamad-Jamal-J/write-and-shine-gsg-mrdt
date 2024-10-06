@@ -8,10 +8,6 @@ from posts.services import PostRepository
 from posts.services import update_post_metadata
 
 
-def index(request):
-    return render(request, 'posts/index.html')  
-
-
 @api_view(['POST', 'GET'])
 def create_post(request):
     if request.user.is_authenticated:

@@ -22,7 +22,7 @@
         </div>
         <br>
         <form method="POST" action="{% url 'delete_edit_post' post.id %}">
-            {% csrf_token %}  <!-- Make sure to include CSRF token -->
+            {% csrf_token %}
             <h3>Title</h3>
             <input type="text" id="title" name="title" value="{{ post.title }}" required placeholder="Add title" class="tags-input2">
             <textarea class="post-input" placeholder="What do you want to talk about?" id="body" name="body" required>{{ post.body }}</textarea>
