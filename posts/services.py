@@ -2,7 +2,8 @@ from interactions.services import InteractionRepository
 from posts.models import Post, Tag
 from django.contrib.auth import get_user_model
 
-def update_post_metadata(posts, user):
+
+def update_post_metadata(posts, user=None):
     """
     Update each post's likes count, comments count, and tags.
     
@@ -18,16 +19,17 @@ def update_post_metadata(posts, user):
         post.comments_count = post.comment_set.count()
         post.post_tags = post.tags.all()
         # Check if the user liked the post
-        if user.is_authenticated:
-            # Check if the user is authenticated and liked the post
-            post.liked = InteractionRepository.user_liked_post(user, post.id)
-        else:
-            post.liked = False  # User is not logged in, set to False
+        if user is not None:
+            if user.is_authenticated:
+                # Check if the user is authenticated and liked the post
+                post.liked = InteractionRepository.user_liked_post(user, post.id)
+            else:
+                post.liked = False  # User is not logged in, set to False
     return posts
 
 
-
 User = get_user_model()
+
 
 class PostRepository:
     @staticmethod

@@ -1,7 +1,7 @@
-from django.shortcuts import get_object_or_404, redirect, render
+from django.shortcuts import redirect, render
 from rest_framework.decorators import api_view
 from accounts.models import User
-from handlers import MessageHandler
+from .messages import message_handler
 from posts.models import Post, Tag
 from django.utils import timezone
 from django.contrib import messages
@@ -22,11 +22,11 @@ def create_post(request):
 
             if title and body:
                 PostRepository.create_post(title, body, request.user, tags)
-                success_message = MessageHandler.get('post_created', False)
+                success_message = message_handler.get('post_created', False)
                 messages.success(request, success_message)
                 return redirect('get_posts')
             
-            error_message = MessageHandler.get('invalid_data')
+            error_message = message_handler.get('invalid_data')
             messages.error(request, error_message)
             messages.error(request, "The post data is invalid")
             return redirect('get_posts')
@@ -36,7 +36,7 @@ def create_post(request):
             return render(request, 'posts/create_post.html')
 
     else:
-        error_message = MessageHandler.get('not_logged')
+        error_message = message_handler.get('not_logged')
         messages.error(request, error_message)
         return redirect('login_api')
 
@@ -52,19 +52,18 @@ def get_posts(request):
     return render(request, 'home.html', {'posts': posts})
 
 
-@api_view(['GET'])
-def get_user_posts(request, user_id):
-    user = User.objects.filter(id=user_id).first() 
-    if not user:
-        error_message = MessageHandler.get('user_not_found')  
-        messages.error(request, error_message)
-        return redirect('get_posts') 
-    
-    posts = PostRepository.get_user_posts(user_id)
-    posts = update_post_metadata(posts)
-
-    return render(request, 'user.html', {'posts': posts, 'user': user})
-
+# @api_view(['GET'])
+# def get_user_posts(request, user_id):
+#     user = User.objects.filter(id=user_id).first()
+#     if not user:
+#         error_message = message_handler.get('user_not_found')
+#         messages.error(request, error_message)
+#         return redirect('get_posts')
+#
+#     posts = PostRepository.get_user_posts(user_id)
+#     posts = update_post_metadata(posts, user)
+#
+#     return render(request, 'user.html', {'posts': posts, 'user': user})
 
 
 @api_view(['GET', 'POST'])
@@ -72,13 +71,13 @@ def delete_edit_post(request, post_id):
     if request.user.is_authenticated:
         post = Post.objects.filter(id=post_id).first() 
         if not post:
-            error_message = MessageHandler.get('post_not_found')  
+            error_message = message_handler.get('post_not_found')  
             messages.error(request, error_message)
             return redirect('get_posts') 
 
         # Check if the authenticated user is the author of the post
         if post.author != request.user:
-            error_message = MessageHandler.get('no_permission_to_edit')
+            error_message = message_handler.get('no_permission_to_edit')
             messages.error(request, error_message)
             return redirect('get_posts')
 
@@ -93,7 +92,7 @@ def delete_edit_post(request, post_id):
             # Check if the form indicates deletion
             if 'delete' in request.POST:
                 post.delete()  # Delete the post
-                success_message = MessageHandler.get('post_deleted', False)
+                success_message = message_handler.get('post_deleted', False)
                 messages.success(request, success_message)
                 return redirect('get_posts')  # Redirect to the list of posts after deletion  
 
@@ -102,12 +101,12 @@ def delete_edit_post(request, post_id):
                 tag_id = request.POST['delete_tag']
                 tag = Tag.objects.filter(id=tag_id)
                 if not tag:
-                    error_message = MessageHandler.get('tag_not_found')  
+                    error_message = message_handler.get('tag_not_found')  
                     messages.error(request, error_message)
                     return redirect('get_posts') 
                 
                 post.tags.remove(tag) # Remove the tag from the post
-                success_message = MessageHandler.get('tag_removed', False)
+                success_message = message_handler.get('tag_removed', False)
                 messages.success(request, success_message) 
                 return redirect('get_posts')  # Redirect to the list of posts after deleting a tag
 
@@ -125,25 +124,26 @@ def delete_edit_post(request, post_id):
             post.updated_at = timezone.now()
             post.save()
             
-            success_message = MessageHandler.get('post_updated', False)
+            success_message = message_handler.get('post_updated', False)
             messages.success(request, success_message)
             return redirect('get_posts') 
 
-    error_message = MessageHandler.get('not_logged')
+    error_message = message_handler.get('not_logged')
     messages.error(request, error_message)
     return redirect('login_api')
 
 
 # added this variation of get_user_posts (we'll agree on/delete it later)
 def get_user_posts_raw(request, user_id):
-    user = User.objects.filter(id=user_id).first() 
+    user = User.objects.filter(id=user_id).first()
     if not user:
-        error_message = MessageHandler.get('user_not_found')  
+        error_message = message_handler.get('user_not_found')  
         messages.error(request, error_message)
         return redirect('get_posts') 
     
-    posts = Post.objects.filter(author=user)
-    posts = update_post_metadata(posts)
+    # posts = Post.objects.filter(author=user)
+    posts = Post.objects.filter(author=user).order_by('-created_at')
+    posts = update_post_metadata(posts, user=None)
     return {
         'posts': posts,
         'user': {
