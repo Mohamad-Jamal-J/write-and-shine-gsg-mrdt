@@ -10,7 +10,7 @@ Write & Shine is a web platform that allows users to publish and discover divers
 - [Developers Roles and Responsibilities](#developers-roles-and-responsibilities)
 - [UI Prototypes](#ui-prototypes)
 - [Design Patterns](#design-patterns)
-- [Testing](#testing)
+- [Proposal Document](#proposal-document)
 
 
 ## Project Focus
@@ -56,3 +56,6 @@ You can view the UI prototypes [here](https://docs.google.com/presentation/d/1AN
 The FDP is used to create MessageHandler instances for different applications, managing feedback messages efficiently.
 ### Observer Design Pattern (ODP)
 The ODP will be implemented for the following and followers feature in the next release, enabling users to receive notifications about updates from accounts they follow, boosting user engagement.
+
+## Proposal Document
+You can view the proposal document [here](https://docs.google.com/document/d/1DYpF0NFRY3Cn5sV4eGW7F81uCOLlB1t9spdQu9ub58M/edit?usp=sharing)
