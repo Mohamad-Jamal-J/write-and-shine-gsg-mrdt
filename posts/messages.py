@@ -9,12 +9,12 @@ SUCCESS_MESSAGES = {
 
 ERROR_MESSAGES = {
     # request method - related error messages
-    'invalid_data' : 'The post data is invalid.',
+    'invalid_data': 'The post data is invalid.',
     'not_logged': 'You should have an account and be logged in.',
     'no_permission_to_edit': 'You do not have permission to edit or delete this post.',
-    'user_not_found' : 'No user associated with the provided data was found.',
-    'post_not_found' : 'No post associated with the provided data was found.',
-    'tag_not_found' : 'No tag associated with the provided data was found.',
+    'user_not_found': 'No user associated with the provided data was found.',
+    'post_not_found': 'No post associated with the provided data was found.',
+    'tag_not_found': 'No tag associated with the provided data was found.',
 }
 
 

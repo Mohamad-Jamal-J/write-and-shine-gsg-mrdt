@@ -36,4 +36,4 @@ class SearchRepository:
         ).distinct()
 
         # Update post metadata
-        return update_post_metadata(posts)
+        return update_post_metadata(posts, user=None)
