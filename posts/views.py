@@ -41,7 +41,7 @@ def get_posts(request):
     posts = Post.objects.all().order_by('-created_at')
 
     # Update post metadata
-    posts = update_post_metadata(posts)
+    posts = update_post_metadata(posts, request.user)
 
     return render(request, 'home.html', {'posts': posts})
 
