@@ -112,9 +112,14 @@ def delete_edit_post(request, post_id):
 
             # Handle adding new tags
             new_tag_name = request.POST.get('new_tag', '').strip()
-            if new_tag_name:
-                tag, created = Tag.objects.get_or_create(name=new_tag_name.capitalize())
-                post.tags.add(tag)  # Associate the new tag with the post
+
+            # Split and capitalize each tag, then handle them individually
+            tags = [tag.strip().capitalize() for tag in new_tag_name.split(',') if tag.strip()]
+
+            for tag_name in tags:
+                tag, _ = Tag.objects.get_or_create(name=tag_name)  # Create or retrieve each tag
+                post.tags.add(tag)  # Associate each tag with the post
+
 
             # Handle the post editing
             post_fields = ['title', 'body']
