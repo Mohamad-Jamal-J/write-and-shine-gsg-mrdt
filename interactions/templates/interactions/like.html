@@ -1,5 +1,7 @@
 <form method="GET" action="{% url 'like_post' post.id %}">
     {% csrf_token %}
-    <button type="submit" class="like-btn"> <strong class="like-count">{{ post.likes_count }}</strong><i
-            class="fas fa-thumbs-up l"></i> Like</button>
+    <button type="submit" class="{% if user.is_authenticated and post.liked %}liked{% else %}like-btn{% endif %}">
+        <strong class="like-count">{{ post.likes_count }}</strong>
+        <i class="fas fa-thumbs-up l"></i> Like
+    </button>
 </form>
