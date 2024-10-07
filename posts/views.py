@@ -37,7 +37,8 @@ def create_post(request):
 
 @api_view(['GET'])
 def get_posts(request):
-    posts = Post.objects.all()
+    # Retrieve posts ordered by 'created_at' in descending order
+    posts = Post.objects.all().order_by('-created_at')
 
     # Update post metadata
     posts = update_post_metadata(posts)
