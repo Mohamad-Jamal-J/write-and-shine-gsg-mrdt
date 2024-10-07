@@ -9,8 +9,8 @@
 .like-btn i {
     margin-left: 5px; /* Adds a small gap between the text and the icon */
 }
-.like-btn.liked {
-    color: blue; /* Change to blue when clicked */
+.liked {
+    color: blue !important;/* Change to blue when clicked */
 }
 .like-count {
     margin-right: 2px; /* Adds a gap between the like count and the icon/text */
