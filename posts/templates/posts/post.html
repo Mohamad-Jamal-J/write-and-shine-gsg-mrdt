@@ -2,7 +2,7 @@
 <div id="cards-container" class="cards">
     <p>Number of posts: {{ posts|length }}</p>
     {% for post in posts %}
-    <div class="card" data-tags="{{ post.post_tags|join:','|lower }}">
+    <div class="card" data-tags="{{ post.post_tags|join:','|lower }} {{ post.title|lower }} {{ post.body|lower }}">
         <div class="profile">
             <img src="{{ post.author.profile.profile_picture.url }}" alt="profile pic">
         </div>
