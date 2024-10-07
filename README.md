@@ -63,4 +63,4 @@ The FDP is used to create MessageHandler instances for different applications, m
 The ODP will be implemented for the following and followers feature in the next release, enabling users to receive notifications about updates from accounts they follow, boosting user engagement.
 
 ## Proposal Document
-You can view the proposal document [here](https://docs.google.com/document/d/1DYpF0NFRY3Cn5sV4eGW7F81uCOLlB1t9spdQu9ub58M/edit?usp=sharing)
+You can view the proposal document [here](https://drive.google.com/file/d/10o-wHsGwA6kXgCNQ_Zx464C6XkTRdkiu/view?usp=sharing)
