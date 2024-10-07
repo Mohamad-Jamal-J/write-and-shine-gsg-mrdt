@@ -99,16 +99,17 @@ def delete_edit_post(request, post_id):
             # Handle tag deletion
             if 'delete_tag' in request.POST:
                 tag_id = request.POST['delete_tag']
-                tag = Tag.objects.filter(id=tag_id)
-                if not tag:
-                    error_message = message_handler.get('tag_not_found')  
+                try:
+                    tag = Tag.objects.get(id=tag_id)
+                except Tag.DoesNotExist:
+                    error_message = message_handler.get('tag_not_found')
                     messages.error(request, error_message)
-                    return redirect('get_posts') 
-                
-                post.tags.remove(tag) # Remove the tag from the post
+                    return redirect('get_posts')
+
+                post.tags.remove(tag)  # Remove the tag from the post
                 success_message = message_handler.get('tag_removed', False)
-                messages.success(request, success_message) 
-                return redirect('get_posts')  # Redirect to the list of posts after deleting a tag
+                messages.success(request, success_message)
+                return redirect('get_posts')
 
             # Handle adding new tags
             new_tag_name = request.POST.get('new_tag', '').strip()
