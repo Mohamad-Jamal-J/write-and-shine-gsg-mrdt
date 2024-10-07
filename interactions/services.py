@@ -89,3 +89,12 @@ class InteractionRepository:
             None
         """
         comment.delete()
+
+
+    @staticmethod
+    def user_liked_post(user, post_id):
+        try:
+            post = Post.objects.get(id=post_id)
+            return Like.objects.filter(user=user, post=post).exists()
+        except Post.DoesNotExist:
+            return False

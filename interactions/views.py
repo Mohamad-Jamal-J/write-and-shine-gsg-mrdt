@@ -1,5 +1,5 @@
 from django.contrib import messages
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from rest_framework.decorators import api_view
 from .services import InteractionRepository
@@ -101,3 +101,20 @@ def delete_comment(request, comment_id):
         return redirect('get_posts')
 
     return HttpResponse("You do not have permission to delete this comment.", status=403)
+
+
+@api_view(['GET'])
+def has_user_liked_post(request, post_id):
+    """
+    Checks if the logged-in user has liked the post.
+    
+    Args:
+        request: The HTTP request object.
+        post_id: The ID of the post to check for like.
+    
+    Returns:
+        JsonResponse: Boolean response indicating whether the post is liked by the user.
+    """
+    if request.user.is_authenticated:
+        liked = InteractionRepository.user_liked_post(request.user, post_id)
+        return JsonResponse({'liked': liked})

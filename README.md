@@ -4,13 +4,18 @@
 Write & Shine is a web platform that allows users to publish and discover diverse content across various fields, including technology, science, and art. It fosters a community for professionals to share knowledge, insights, and stay updated on the latest trends.
 
 ## Table of Contents
-- [Project Focus](#project-focus)
-- [System Components](#system-components)
-- [System Architecture](#system-architecture)
-- [Developers Roles and Responsibilities](#developers-roles-and-responsibilities)
-- [UI Prototypes](#ui-prototypes)
-- [Design Patterns](#design-patterns)
-- [Proposal Document](#proposal-document)
+- [Write \& Shine (Python Django Application)](#write--shine-python-django-application)
+  - [Overview](#overview)
+  - [Table of Contents](#table-of-contents)
+  - [Project Focus](#project-focus)
+  - [System Components](#system-components)
+  - [System Architecture](#system-architecture)
+  - [Developers Roles and Responsibilities](#developers-roles-and-responsibilities)
+  - [UI Prototypes](#ui-prototypes)
+  - [Design Patterns](#design-patterns)
+    - [Factory Design Pattern (FDP)](#factory-design-pattern-fdp)
+    - [Observer Design Pattern (ODP)](#observer-design-pattern-odp)
+  - [Proposal Document](#proposal-document)
 
 
 ## Project Focus
@@ -42,7 +47,7 @@ The system follows the Model Service View Template (MSVT) pattern, extending Dja
 | **Team Lead - Back-End** | Mohammad Jaradat       | Overall project coordination, Back-End  |
 | **Front-End Developer**  | Hala Barqawi           | Profile page, Create Posts              |
 | **Front-End Developer**  | Mays Qasem             | Sign In/Up Page, Home Page              |
-| **Back-End Developer**   | Sarah Abu Irmeileh     | Posts Management                        |
+| **Back-End Developer**   | Sarah Abu Irmeileh     | Posts Management, Interactions Management                     |
 
 
 ## UI Prototypes
