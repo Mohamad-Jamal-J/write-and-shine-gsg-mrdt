@@ -38,8 +38,8 @@ class MessageHandlerFactory(ABC):
             from accounts.messages import SUCCESS_MESSAGES, ERROR_MESSAGES
         elif app_name == 'profiles':
             from profiles.messages import SUCCESS_MESSAGES, ERROR_MESSAGES
-        # elif app_name == 'posts':
-        #     from posts.messages import SUCCESS_MESSAGES, ERROR_MESSAGES
+        elif app_name == 'posts':
+            from posts.messages import SUCCESS_MESSAGES, ERROR_MESSAGES
         # elif app_name == 'interactions':
         #     from interactions.messages import SUCCESS_MESSAGES, ERROR_MESSAGES
         # elif app_name == 'search':
