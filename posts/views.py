@@ -99,22 +99,28 @@ def delete_edit_post(request, post_id):
             # Handle tag deletion
             if 'delete_tag' in request.POST:
                 tag_id = request.POST['delete_tag']
-                tag = Tag.objects.filter(id=tag_id)
-                if not tag:
-                    error_message = message_handler.get('tag_not_found')  
+                try:
+                    tag = Tag.objects.get(id=tag_id)
+                except Tag.DoesNotExist:
+                    error_message = message_handler.get('tag_not_found')
                     messages.error(request, error_message)
-                    return redirect('get_posts') 
-                
-                post.tags.remove(tag) # Remove the tag from the post
+                    return redirect('get_posts')
+
+                post.tags.remove(tag)  # Remove the tag from the post
                 success_message = message_handler.get('tag_removed', False)
-                messages.success(request, success_message) 
-                return redirect('get_posts')  # Redirect to the list of posts after deleting a tag
+                messages.success(request, success_message)
+                return redirect('get_posts')
 
             # Handle adding new tags
             new_tag_name = request.POST.get('new_tag', '').strip()
-            if new_tag_name:
-                tag, created = Tag.objects.get_or_create(name=new_tag_name.capitalize())
-                post.tags.add(tag)  # Associate the new tag with the post
+
+            # Split and capitalize each tag, then handle them individually
+            tags = [tag.strip().capitalize() for tag in new_tag_name.split(',') if tag.strip()]
+
+            for tag_name in tags:
+                tag, _ = Tag.objects.get_or_create(name=tag_name)  # Create or retrieve each tag
+                post.tags.add(tag)  # Associate each tag with the post
+
 
             # Handle the post editing
             post_fields = ['title', 'body']
